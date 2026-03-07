@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.static(__dirname));
 
 // Ambil API Key dari Environment Variable di Render
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+const OPENROUTER_API_KEY = "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";
 
 /**
  * ROUTE UTAMA (GET /)
@@ -96,4 +96,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🌸 HikariTutor Live di port ${PORT}`);
 });
+
 
