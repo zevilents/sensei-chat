@@ -3,16 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>HikariTutor - Summer Anime Edition</title>
+    <title>HikariTutor - Summer Anime</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Noto+Sans+JP:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
-            --sky-blue: #7ed6df;
-            --deep-blue: #22a6b3;
-            --sun-yellow: #f9ca24;
-            --cloud-white: rgba(255, 255, 255, 0.95);
-            --text-dark: #130f40;
+            --sky: #7ed6df; --deep: #22a6b3; --sun: #f9ca24;
+            --cloud: rgba(255, 255, 255, 0.96); --dark: #130f40;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -20,250 +17,132 @@
         body {
             font-family: 'Poppins', 'Noto Sans JP', sans-serif;
             background: linear-gradient(135deg, #7ed6df 0%, #e0fcff 100%);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            /* Menggunakan dvh agar akurat di mobile browser */
-            height: 100vh;
-            height: 100dvh; 
-            overflow: hidden;
+            margin: 0; display: flex; justify-content: center;
+            height: 100dvh; overflow: hidden;
         }
 
-        /* --- ANIMASI SAKURA --- */
-        .sakura-container {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 1;
-        }
-        .petal {
-            position: absolute; background-color: #ffdae0;
-            border-radius: 150% 0 150% 0; animation: fall linear infinite;
-        }
-        @keyframes fall {
-            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
-        }
+        /* Sakura Animation */
+        .sakura-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        .petal { position: absolute; background: #ffdae0; border-radius: 150% 0 150% 0; animation: fall linear infinite; }
+        @keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
 
-        /* --- CONTAINER UTAMA --- */
-        .app-container {
-            width: 100%;
-            max-width: 500px;
-            display: flex;
-            flex-direction: column; /* Menyusun ke bawah secara urut */
-            z-index: 2;
-            background: var(--cloud-white);
-            backdrop-filter: blur(8px);
-            box-shadow: 0 0 40px rgba(0,0,0,0.1);
-            position: relative;
-            height: 100%; /* Mengikuti tinggi body */
+        .app {
+            width: 100%; max-width: 500px; display: flex; flex-direction: column;
+            z-index: 2; background: var(--cloud); backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(0,0,0,0.1); height: 100%;
         }
 
         header {
-            padding: 15px 20px;
-            background: white;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-bottom: 4px solid var(--sun-yellow);
-            flex-shrink: 0; /* Header tidak boleh menyusut */
+            padding: 15px 20px; background: white; display: flex; align-items: center; gap: 12px;
+            border-bottom: 4px solid var(--sun); flex-shrink: 0;
         }
 
-        .avatar {
-            width: 42px; height: 42px;
-            background: var(--sky-blue);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem; border: 2px solid white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+        .avatar { width: 45px; height: 45px; background: var(--sky); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
-        .status-info h1 {
-            font-family: 'Fredoka One', cursive;
-            font-size: 1.1rem; margin: 0; color: var(--deep-blue);
-        }
+        #chat-window { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
 
-        /* --- CHAT WINDOW --- */
-        #chat-window {
-            flex: 1; /* Mengambil sisa ruang tengah */
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            background: rgba(255,255,255,0.3);
-        }
+        /* RUBY STYLE (Romaji di Atas) */
+        ruby { ruby-position: over; ruby-align: center; }
+        rt { font-size: 0.65rem; color: var(--deep); font-weight: 700; font-family: 'Poppins', sans-serif; padding-bottom: 1px; }
 
         .bubble {
-            max-width: 85%;
-            padding: 12px 16px;
-            border-radius: 20px;
-            font-size: 0.92rem;
-            line-height: 1.5;
-            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            max-width: 88%; padding: 12px 18px; border-radius: 20px; font-size: 0.95rem;
+            line-height: 2.2 !important; /* Memberi ruang untuk teks di atas */
+            animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
         }
+        @keyframes pop { from { opacity: 0; transform: scale(0.9) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
-        @keyframes popIn {
-            from { opacity: 0; transform: scale(0.9) translateY(10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
+        .sensei { align-self: flex-start; background: white; color: var(--dark); border-bottom-left-radius: 2px; border: 1px solid #eee; }
+        .user { align-self: flex-end; background: var(--sky); color: white; border-bottom-right-radius: 2px; font-weight: 500; }
 
-        .sensei {
-            align-self: flex-start;
-            background: white;
-            color: var(--text-dark);
-            border-bottom-left-radius: 2px;
-            border: 1px solid #ecf0f1;
-        }
+        .bubble h3 { color: var(--deep); margin: 10px 0 5px; font-size: 1.1rem; font-family: 'Fredoka One'; border-left: 4px solid var(--sun); padding-left: 10px; }
 
-        .user {
-            align-self: flex-end;
-            background: var(--sky-blue);
-            color: white;
-            border-bottom-right-radius: 2px;
-        }
-
-        /* --- LOADING SHURIKEN --- */
-        .loading-bubble {
-            align-self: flex-start;
-            background: white;
-            padding: 10px 15px;
-            border-radius: 15px;
-            display: none;
-            align-items: center;
-            gap: 10px;
-            border: 2px solid var(--sun-yellow);
-        }
-        .shuriken {
-            width: 24px; height: 24px;
-            background: var(--sun-yellow);
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            animation: spin 0.8s linear infinite;
-        }
+        /* Loading */
+        #loading { align-self: flex-start; background: white; padding: 10px 15px; border-radius: 15px; display: none; align-items: center; gap: 10px; border: 2px solid var(--sun); margin-bottom: 10px; }
+        .shuriken { width: 25px; height: 25px; background: var(--sun); clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* --- INPUT AREA (FIXED BOTTOM) --- */
-        .bottom-bar {
-            padding: 15px;
-            background: white;
-            border-top: 1px solid #eee;
-            flex-shrink: 0; /* Area input tidak boleh menyusut */
-            /* Mengatasi area aman iPhone (notch bawah) */
-            padding-bottom: calc(15px + env(safe-area-inset-bottom));
-        }
-
-        .input-container {
-            background: #f8f9fa;
-            padding: 5px;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            border: 2px solid var(--sky-blue);
-            transition: 0.3s;
-        }
-
-        .input-container:focus-within {
-            border-color: var(--deep-blue);
-            background: white;
-        }
-
-        input {
-            flex: 1; border: none; padding: 10px 15px;
-            outline: none; font-size: 1rem; font-family: inherit;
-            background: transparent;
-        }
-
-        button {
-            background: var(--sun-yellow);
-            color: white; border: none;
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1rem;
-            flex-shrink: 0;
-        }
-
-        /* MARKDOWN STYLING */
-        .bubble h3 { color: var(--deep-blue); margin: 8px 0 4px; font-size: 1rem; }
-        .bubble hr { border: 1px dashed #eee; margin: 8px 0; }
+        .input-bar { padding: 15px; background: white; border-top: 1px solid #eee; flex-shrink: 0; padding-bottom: calc(15px + env(safe-area-inset-bottom)); }
+        .input-group { background: #f1f2f6; border-radius: 30px; display: flex; align-items: center; border: 2px solid var(--sky); padding: 5px; }
+        input { flex: 1; border: none; padding: 10px 15px; outline: none; font-size: 1rem; background: transparent; }
+        button { background: var(--sun); color: white; border: none; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
     </style>
 </head>
 <body>
 
-<div class="sakura-container" id="sakura"></div>
+<div class="sakura-bg" id="sakura"></div>
 
-<div class="app-container">
+<div class="app">
     <header>
         <div class="avatar">🏯</div>
-        <div class="status-info">
-            <h1>HIKARI TUTOR</h1>
-            <p style="color: #27ae60; font-weight: bold; font-size: 0.75rem; margin:0;">● Sensei is active!</p>
+        <div>
+            <h1 style="font-family:'Fredoka One'; font-size:1.2rem; margin:0; color:var(--deep);">HIKARI TUTOR</h1>
+            <p style="color:#27ae60; font-size:0.75rem; margin:0; font-weight:bold;">● Sensei is Ready!</p>
         </div>
     </header>
 
     <div id="chat-window">
-        <div class="bubble sensei">
-            Ohayou! ☀️ Saya **Hikari Sensei**. Sudah siap bedah kata Jepang lagi? Ganbatte!
-        </div>
-        
-        <div id="loading" class="loading-bubble">
-            <div class="shuriken"></div>
-            <span style="font-size: 0.85rem; font-weight: bold; color: var(--deep-blue);">Sensei thinking...</span>
-        </div>
+        <div class="bubble sensei">Ohayou! ☀️ Saya **Hikari Sensei**. Ada kata atau kalimat Jepang yang ingin kamu pelajari?</div>
     </div>
 
-    <div class="bottom-bar">
-        <div class="input-container">
-            <input type="text" id="userInput" placeholder="Tanya sesuatu..." autocomplete="off" onkeypress="if(event.key==='Enter') sendMessage()">
+    <div id="loading">
+        <div class="shuriken"></div>
+        <span style="font-size:0.85rem; font-weight:bold; color:var(--deep);">Sensei is thinking...</span>
+    </div>
+
+    <div class="input-bar">
+        <div class="input-group">
+            <input type="text" id="userInput" placeholder="Tanya Sensei..." autocomplete="off" onkeypress="if(event.key==='Enter') sendMessage()">
             <button onclick="sendMessage()">⚡</button>
         </div>
     </div>
 </div>
 
 <script>
-    // Sakura petals animation
-    const sakuraContainer = document.getElementById('sakura');
+    // Sakura petals
+    const sakura = document.getElementById('sakura');
     for (let i = 0; i < 15; i++) {
-        const petal = document.createElement('div');
-        petal.className = 'petal';
-        petal.style.left = Math.random() * 100 + 'vw';
-        petal.style.width = Math.random() * 8 + 5 + 'px';
-        petal.style.height = petal.style.width;
-        petal.style.animationDuration = Math.random() * 3 + 3 + 's';
-        petal.style.animationDelay = Math.random() * 5 + 's';
-        sakuraContainer.appendChild(petal);
+        const p = document.createElement('div');
+        p.className = 'petal';
+        p.style.left = Math.random() * 100 + 'vw';
+        p.style.width = p.style.height = Math.random() * 8 + 6 + 'px';
+        p.style.animationDuration = Math.random() * 3 + 4 + 's';
+        p.style.animationDelay = Math.random() * 5 + 's';
+        sakura.appendChild(p);
     }
 
     async function sendMessage() {
         const input = document.getElementById('userInput');
-        const chatWindow = document.getElementById('chat-window');
-        const loading = document.getElementById('loading');
+        const chat = document.getElementById('chat-window');
+        const load = document.getElementById('loading');
         const text = input.value.trim();
-        
-        if (!text) return;
+        if(!text) return;
 
-        chatWindow.innerHTML += `<div class="bubble user">${text}</div>`;
+        chat.innerHTML += `<div class="bubble user">${text}</div>`;
         input.value = '';
-        chatWindow.appendChild(loading);
-        loading.style.display = 'flex';
-        chatWindow.scrollTop = chatWindow.scrollHeight;
+        chat.appendChild(load);
+        load.style.display = 'flex';
+        chat.scrollTop = chat.scrollHeight;
 
         try {
-            const response = await fetch("/api/chat", {
+            const res = await fetch("/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ message: text })
             });
-            const data = await response.json();
+            const data = await res.json();
             
-            loading.style.display = 'none';
-            chatWindow.innerHTML += `<div class="bubble sensei">${marked.parse(data.reply)}</div>`;
+            // MAGIC: Ganti format [romaji] menjadi tag Ruby
+            const rubyConverted = data.reply.replace(/(\S+)\[([^\]]+)\]/g, '<ruby>$1<rt>$2</rt></ruby>');
+            
+            load.style.display = 'none';
+            chat.innerHTML += `<div class="bubble sensei">${marked.parse(rubyConverted)}</div>`;
         } catch (e) {
-            loading.style.display = 'none';
-            chatWindow.innerHTML += `<div class="bubble sensei">Gomen! Koneksi terputus. 🌸</div>`;
+            load.style.display = 'none';
+            chat.innerHTML += `<div class="bubble sensei">Gomen, koneksi terputus! 🌸</div>`;
         }
-        chatWindow.scrollTop = chatWindow.scrollHeight;
+        chat.scrollTop = chat.scrollHeight;
     }
 </script>
 
