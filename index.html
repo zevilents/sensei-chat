@@ -3,31 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HikariTutor - Sensei Chat</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <title>HikariTutor - Sensei Chat (Anime Night Mode)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
-            --sakura: #FFB7C5;
-            --sakura-dark: #ff8fa3;
-            --indigo: #2D3436;
-            --paper: #F9F9F9;
-            --sensei-bg: #FFFFFF;
-            --user-bg: #FFB7C5;
+            /* Palet Warna Anime "Night Mode" */
+            --bg-dark: #10101a;       /* Latar belakang utama (sangat gelap) */
+            --chat-bg: #161625;       /* Sedikit lebih terang untuk container */
+            --header-bg: #1a1a2e;
+            --user-bubble: #e94560;    /* Merah-magenta ( cool, netral ) */
+            --ai-bubble: #252535;      /* Abu-abu gelap untuk AI */
+            --text-main: #e6e6e6;
+            --accent-cyan: #16e0bd;    /* Cyan terang (glowing) */
+            --accent-gold: #f9a826;    /* Emas untuk heading ### */
+            --border-color: #31364a;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            font-family: 'Poppins', 'Noto Sans JP', sans-serif;
-            background-color: var(--paper);
-            background-image: radial-gradient(#FFB7C5 0.5px, transparent 0.5px);
-            background-size: 20px 20px; /* Pola titik minimalis */
+            font-family: 'Rajdhani', 'Noto Sans JP', sans-serif;
+            background-color: var(--bg-dark);
+            /* Pola titik minimalis seperti pola dot manga di latar belakang */
+            background-image: radial-gradient(#1a1a2e 0.5px, transparent 0.5px);
+            background-size: 20px 20px;
             margin: 0;
             display: flex;
             justify-content: center;
             height: 100vh;
-            color: var(--indigo);
+            color: var(--text-main);
         }
 
         .app-container {
@@ -36,47 +41,53 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            background: rgba(249, 249, 249, 0.8);
-            backdrop-filter: blur(10px);
+            background: var(--chat-bg);
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
         }
 
-        /* HEADER */
+        /* HEADER - SLEEK DARK */
         header {
-            padding: 20px;
-            background: white;
+            padding: 15px 20px;
+            background: var(--header-bg);
             display: flex;
             align-items: center;
             gap: 15px;
-            border-bottom: 2px solid var(--sakura);
+            border-bottom: 2px solid var(--accent-cyan);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
             position: sticky;
             top: 0;
             z-index: 10;
         }
 
-        .avatar {
+        /* Avatar Keren (placeholder fox/kitsune mask style) */
+        .avatar-container {
             width: 45px;
             height: 45px;
-            background: var(--sakura);
+            background: #1a1a2e;
+            border: 2px solid silver;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            color: white;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 10px rgba(255, 183, 197, 0.4);
+            color: var(--accent-cyan);
+            font-size: 1.5rem;
+            box-shadow: 0 0 10px rgba(22, 224, 189, 0.4);
         }
 
         .status-info h1 {
             font-size: 1.1rem;
             margin: 0;
-            color: var(--indigo);
+            color: var(--text-main);
+            letter-spacing: 1px;
         }
 
         .status-info p {
             font-size: 0.75rem;
             margin: 0;
-            color: #636e72;
+            color: #b2bec3;
             display: flex;
             align-items: center;
             gap: 5px;
@@ -85,9 +96,16 @@
         .status-dot {
             width: 8px;
             height: 8px;
-            background: #55efc4;
+            background: var(--accent-cyan);
             border-radius: 50%;
             display: inline-block;
+            animation: pulseCyan 1.5s infinite;
+        }
+
+        @keyframes pulseCyan {
+            0% { box-shadow: 0 0 0 0 rgba(22, 224, 189, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(22, 224, 189, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(22, 224, 189, 0); }
         }
 
         /* CHAT WINDOW */
@@ -98,17 +116,18 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            padding-bottom: 100px; /* Ruang untuk floating input */
+            padding-bottom: 120px; /* Ruang untuk floating input */
         }
 
         .bubble {
             max-width: 85%;
             padding: 15px;
-            border-radius: 20px;
+            border-radius: 18px;
             font-size: 0.95rem;
             line-height: 1.6;
             position: relative;
             animation: fadeIn 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         @keyframes fadeIn {
@@ -116,46 +135,90 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Geometri bubble yang lebih ramping, sedikit blocky */
         .sensei {
             align-self: flex-start;
-            background: var(--sensei-bg);
-            color: var(--indigo);
+            background: var(--ai-bubble);
+            color: var(--text-main);
             border-bottom-left-radius: 5px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid #31364a;
         }
 
         .user {
             align-self: flex-end;
-            background: var(--user-bg);
+            background: var(--user-bubble);
             color: white;
             border-bottom-right-radius: 5px;
-            box-shadow: 0 5px 15px rgba(255, 183, 197, 0.3);
+            box-shadow: 0 4px 10px rgba(233, 69, 96, 0.3);
         }
 
         /* MARKDOWN STYLE INSIDE BUBBLE */
         .bubble h3 { 
             margin: 10px 0; 
             font-size: 1rem; 
-            color: #d63031; 
-            border-left: 3px solid var(--sakura);
+            color: var(--accent-gold); 
+            border-left: 3px solid var(--accent-gold);
             padding-left: 10px;
+            letter-spacing: 1px;
         }
-        .bubble hr { border: none; border-top: 1px solid rgba(0,0,0,0.05); margin: 10px 0; }
-        .bubble code { background: rgba(0,0,0,0.05); padding: 2px 4px; border-radius: 4px; font-family: monospace; }
+        .bubble hr { border: none; border-top: 1px solid #31364a; margin: 10px 0; }
+        .bubble code { background: rgba(0,0,0,0.2); padding: 2px 4px; border-radius: 4px; font-family: monospace; color: var(--accent-cyan); }
+        .bubble p { margin: 8px 0; }
 
-        /* FLOATING INPUT AREA */
+        /* ANIMASI LOADING SHURIKEN */
+        .loading-bubble {
+            align-self: flex-start;
+            background: var(--ai-bubble);
+            color: var(--text-main);
+            border-radius: 18px;
+            border-bottom-left-radius: 5px;
+            border: 1px solid #31364a;
+            padding: 15px 20px;
+            display: none; /* Disembunyikan secara default */
+            align-items: center;
+            gap: 12px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .shuriken-loader {
+            width: 30px;
+            height: 30px;
+            border: 4px solid var(--accent-cyan);
+            border-radius: 50%;
+            border-right-color: transparent;
+            border-bottom-color: transparent;
+            animation: shurikenSpin 0.75s linear infinite;
+        }
+
+        @keyframes shurikenSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 0.85rem;
+            color: #b2bec3;
+            letter-spacing: 1px;
+        }
+
+        /* FLOATING INPUT AREA - SLEEK DARK */
         .input-container {
             position: absolute;
-            bottom: 20px;
+            bottom: 25px;
             left: 20px;
             right: 20px;
-            background: white;
-            padding: 8px;
+            background: #1a1a2e;
+            padding: 8px 12px;
             border-radius: 30px;
             display: flex;
             align-items: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            border: 1px solid var(--sakura);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            border: 2px solid #31364a;
+            transition: 0.3s;
+        }
+
+        .input-container:focus-within {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(22, 224, 189, 0.4);
         }
 
         input {
@@ -166,11 +229,14 @@
             outline: none;
             background: transparent;
             font-family: inherit;
+            color: white;
         }
 
+        input::placeholder { color: #57606f; }
+
         button {
-            background: var(--indigo);
-            color: white;
+            background: #e6e6e6;
+            color: var(--bg-dark);
             border: none;
             width: 45px;
             height: 45px;
@@ -179,44 +245,36 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: 0.3s;
+            transition: 0.3s ease-in-out;
         }
 
-        button:active { transform: scale(0.9); background: var(--sakura-dark); }
+        button:active { transform: scale(0.9); background: var(--accent-cyan); color: white;}
 
-        /* LOADING ANIMATION */
-        .typing {
-            font-size: 0.8rem;
-            color: #b2bec3;
-            margin-bottom: 10px;
-            display: none;
-            padding-left: 20px;
-        }
-
-        /* CUSTOM SCROLLBAR */
+        /* SCROLLBAR UNTUK ANDROID/IOS */
         #chat-window::-webkit-scrollbar { width: 5px; }
-        #chat-window::-webkit-scrollbar-thumb { background: var(--sakura); border-radius: 10px; }
+        #chat-window::-webkit-scrollbar-thumb { background: #31364a; border-radius: 10px; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <header>
-        <div class="avatar">光</div>
+        <div class="avatar-container">🦊</div>
         <div class="status-info">
-            <h1>HikariTutor</h1>
-            <p><span class="status-dot"></span> Sensei sedang Online</p>
+            <h1>HIKARI_TUTOR</h1>
+            <p><span class="status-dot"></span> SENSEI: ONLINE</p>
         </div>
     </header>
 
     <div id="chat-window">
         <div class="bubble sensei">
-            こんにちは！ (Konnichiwa!) <br>
-            Saya **Hikari Sensei**. Ada kalimat Bahasa Jepang yang ingin kamu diskusikan hari ini? ✨
+            Konnichiwa! Saya **Hikari Sensei**. Siap bedah kalimat Bahasa Jepang hari ini? ✨
+        </div>
+        <div id="sensei-loading" class="loading-bubble">
+            <div class="shuriken-loader"></div>
+            <div class="loading-text">Channeling energy...</div>
         </div>
     </div>
-
-    <div id="typing-indicator" class="typing">Sensei sedang menulis...</div>
 
     <div class="input-container">
         <input type="text" id="userInput" placeholder="Tanya Sensei..." autocomplete="off" onkeypress="if(event.key==='Enter') sendMessage()">
@@ -230,15 +288,19 @@
     async function sendMessage() {
         const input = document.getElementById('userInput');
         const chatWindow = document.getElementById('chat-window');
-        const typing = document.getElementById('typing-indicator');
+        const loading = document.getElementById('sensei-loading');
         const text = input.value.trim();
         
         if (!text) return;
 
-        // User Bubble
+        // Tampilkan pesan User
         chatWindow.innerHTML += `<div class="bubble user">${text}</div>`;
         input.value = '';
-        typing.style.display = 'block';
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        // Tampilkan Loading Shuriken (pindah ke paling bawah)
+        chatWindow.appendChild(loading);
+        loading.style.display = 'flex';
         chatWindow.scrollTop = chatWindow.scrollHeight;
 
         try {
@@ -251,11 +313,15 @@
             const data = await response.json();
             const formatted = marked.parse(data.reply);
             
+            // Sembunyikan Loading
+            loading.style.display = 'none';
+
+            // Tampilkan Jawaban Sensei
             chatWindow.innerHTML += `<div class="bubble sensei">${formatted}</div>`;
         } catch (e) {
+            loading.style.display = 'none';
             chatWindow.innerHTML += `<div class="bubble sensei" style="color: #ff7675;">Gomen! Sepertinya ada gangguan koneksi. 🌸</div>`;
         } finally {
-            typing.style.display = 'none';
             chatWindow.scrollTop = chatWindow.scrollHeight;
         }
     }
