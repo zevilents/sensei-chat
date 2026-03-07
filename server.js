@@ -25,10 +25,9 @@ app.post('/api/chat', async (req, res) => {
             headers: {
     "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
     "Content-Type": "application/json",
-    // Link website kamu di Render (Wajib untuk OpenRouter)
+    // Link Render kamu (Wajib agar tidak Error "User not found")
     "HTTP-Referer": "https://sensei-chat.onrender.com", 
-    // Nama aplikasi kamu (Bebas)
-    "X-Title": "HikariTutor" 
+    "X-Title": "HikariTutor"
 },
             body: JSON.stringify({
                 "model": "stepfun/step-3.5-flash:free",
@@ -67,4 +66,5 @@ app.post('/api/chat', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🌸 HikariTutor berjalan di port ${PORT}`));
+
 
