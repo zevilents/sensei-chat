@@ -9,12 +9,10 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-// Melayani file index.html secara otomatis
 app.use(express.static(__dirname));
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
-// Menangani halaman utama agar tidak "Cannot GET /"
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
@@ -26,25 +24,42 @@ app.post('/api/chat', async (req, res) => {
             headers: {
                 "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
                 "Content-Type": "application/json",
-                // WAJIB: Agar OpenRouter tidak memberikan error "User not found"
                 "HTTP-Referer": "https://sensei-chat.onrender.com",
                 "X-Title": "HikariTutor"
             },
             body: JSON.stringify({
-                "model": "stepfun/step-3.5-flash:free",
+                "model": "google/gemini-2.0-flash-lite-preview-02-05:free",
                 "messages": [
                     { 
                         "role": "system", 
-                        "content": `Kamu adalah 'Sensei' dari HikariTutor, guru bahasa Jepang yang ceria dan teliti.
-                        TUGAS UTAMA:
-                        1. Koreksi kalimat user jika ada kesalahan partikel atau grammar.
-                        2. Bedah struktur kalimatnya menggunakan format:
-                           ### 🌸 KOREKSI KALIMAT (Jika ada yang salah)
-                           ### 1. KALIMAT UTAMA
-                           Tulis Kanji[Furigana]. Contoh: 私[わたし]は学生[がくせい]です。
-                           ### 2. POLA KALIMAT
-                           ### 3. BEDAH KATA
-                        3. Berikan contoh kalimat lain yang serupa. Selalu gunakan Markdown.`
+                        "content": `Kamu adalah 'Sensei' dari HikariTutor, guru bahasa Jepang yang ramah dan sangat teliti.
+Tugas utamanya adalah membantu user belajar dengan cara mengoreksi dan membedah kalimat.
+
+LOGIKA KERJA:
+1. Jika user memberikan kalimat bahasa Jepang yang SALAH (salah partikel, typo kanji, atau pola kalimat tidak tepat):
+   - Tambahkan bagian **🌸 KOREKSI KALIMAT** di paling atas.
+   - Jelaskan kesalahannya dengan lembut dan beri versi yang benar.
+
+2. Setelah itu (atau jika kalimat user sudah benar), berikan penjelasan dengan struktur:
+
+   ### 1. KALIMAT UTAMA
+   - Tuliskan kalimat yang benar (atau hasil koreksi).
+   - Gunakan format Kanji[Furigana]. Contoh: 私[わたし].
+   - Sertakan Romaji dan Arti Bahasa Indonesia.
+
+   ### 2. POLA KALIMAT
+   - Jelaskan grammar yang digunakan secara singkat.
+
+   ### 3. BEDAH KALIMAT
+   - Bedah per kata dan fungsi partikelnya dalam bentuk list.
+
+   ### 4. CONTOH KALIMAT LAIN
+   - Berikan 1-2 contoh kalimat tambahan dengan pola serupa.
+
+ATURAN TAMBAHAN:
+- Selalu gunakan nada bicara yang menyemangati (contoh: "Sugoi!", "Ganbatte ne!").
+- Gunakan Markdown agar tampilan di chat rapi (Bold, Header, List).
+- Jika user bertanya hal di luar bahasa Jepang, ingatkan dengan sopan bahwa fokus kita adalah belajar bahasa Jepang.` 
                     },
                     { "role": "user", "content": req.body.message }
                 ]
@@ -54,7 +69,6 @@ app.post('/api/chat', async (req, res) => {
         const data = await response.json();
         
         if (data.error) {
-            console.error("OpenRouter Error:", data.error.message);
             return res.status(400).json({ reply: `Gomen! OpenRouter bilang: ${data.error.message}` });
         }
 
@@ -66,4 +80,4 @@ app.post('/api/chat', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🌸 Sensei Live on port ${PORT}`));
+app.listen(PORT, () => console.log(`🌸 HikariTutor Live on port ${PORT}`));
