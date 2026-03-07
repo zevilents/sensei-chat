@@ -23,13 +23,13 @@ app.post('/api/chat', async (req, res) => {
         const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
-                // Format Authorization sesuai standar curl yang kamu berikan
-                "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
-                // Tambahkan header ini agar tidak dianggap robot anonim oleh OpenRouter
-                "HTTP-Referer": "https://sensei-chat.onrender.com", 
-                "X-Title": "HikariTutor"
-            },
+    "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+    "Content-Type": "application/json",
+    // Link website kamu di Render (Wajib untuk OpenRouter)
+    "HTTP-Referer": "https://sensei-chat.onrender.com", 
+    // Nama aplikasi kamu (Bebas)
+    "X-Title": "HikariTutor" 
+},
             body: JSON.stringify({
                 "model": "stepfun/step-3.5-flash:free",
                 "messages": [
@@ -67,3 +67,4 @@ app.post('/api/chat', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🌸 HikariTutor berjalan di port ${PORT}`));
+
