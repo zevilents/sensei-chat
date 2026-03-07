@@ -30,7 +30,7 @@ app.post('/api/chat', async (req, res) => {
                 "X-Title": "HikariTutor"
             },
             body: JSON.stringify({
-                "model": "stepfun/step-3.5-flash:free",
+                "model": "nvidia/nemotron-3-nano-30b-a3b:free",
                 "messages": [
                     { 
                         "role": "system", 
@@ -75,3 +75,4 @@ List (-) per kata/partikel dengan format: Kanji[romaji] (Jenis): Arti.
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 HikariTutor Live on port ${PORT}`));
+
