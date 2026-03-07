@@ -2,63 +2,264 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>HikariTutor - Sensei Chat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        :root { --primary: #ff4757; --dark: #1e272e; --bubble-sensei: #2f3542; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; margin: 0; display: flex; justify-content: center; height: 100vh; }
-        .chat-box { width: 100%; max-width: 500px; display: flex; flex-direction: column; background: #2f3542; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        header { background: var(--primary); padding: 15px; text-align: center; font-weight: bold; font-size: 1.2rem; }
-        #chat-window { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        .bubble { max-width: 85%; padding: 12px 16px; border-radius: 15px; line-height: 1.6; }
-        .bubble h3 { color: #fffa65; font-size: 1rem; margin: 10px 0 5px 0; }
-        .user { align-self: flex-end; background: var(--primary); border-bottom-right-radius: 2px; }
-        .sensei { align-self: flex-start; background: #57606f; border-bottom-left-radius: 2px; }
-        .input-area { display: flex; padding: 15px; background: #2f3542; border-top: 1px solid #57606f; }
-        input { flex: 1; padding: 12px; border-radius: 25px; border: none; background: #1e272e; color: white; outline: none; }
-        button { margin-left: 10px; padding: 10px 20px; border-radius: 25px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; }
+        :root {
+            --sakura: #FFB7C5;
+            --sakura-dark: #ff8fa3;
+            --indigo: #2D3436;
+            --paper: #F9F9F9;
+            --sensei-bg: #FFFFFF;
+            --user-bg: #FFB7C5;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Poppins', 'Noto Sans JP', sans-serif;
+            background-color: var(--paper);
+            background-image: radial-gradient(#FFB7C5 0.5px, transparent 0.5px);
+            background-size: 20px 20px; /* Pola titik minimalis */
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+            color: var(--indigo);
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background: rgba(249, 249, 249, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        /* HEADER */
+        header {
+            padding: 20px;
+            background: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid var(--sakura);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .avatar {
+            width: 45px;
+            height: 45px;
+            background: var(--sakura);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(255, 183, 197, 0.4);
+        }
+
+        .status-info h1 {
+            font-size: 1.1rem;
+            margin: 0;
+            color: var(--indigo);
+        }
+
+        .status-info p {
+            font-size: 0.75rem;
+            margin: 0;
+            color: #636e72;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #55efc4;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* CHAT WINDOW */
+        #chat-window {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding-bottom: 100px; /* Ruang untuk floating input */
+        }
+
+        .bubble {
+            max-width: 85%;
+            padding: 15px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .sensei {
+            align-self: flex-start;
+            background: var(--sensei-bg);
+            color: var(--indigo);
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .user {
+            align-self: flex-end;
+            background: var(--user-bg);
+            color: white;
+            border-bottom-right-radius: 5px;
+            box-shadow: 0 5px 15px rgba(255, 183, 197, 0.3);
+        }
+
+        /* MARKDOWN STYLE INSIDE BUBBLE */
+        .bubble h3 { 
+            margin: 10px 0; 
+            font-size: 1rem; 
+            color: #d63031; 
+            border-left: 3px solid var(--sakura);
+            padding-left: 10px;
+        }
+        .bubble hr { border: none; border-top: 1px solid rgba(0,0,0,0.05); margin: 10px 0; }
+        .bubble code { background: rgba(0,0,0,0.05); padding: 2px 4px; border-radius: 4px; font-family: monospace; }
+
+        /* FLOATING INPUT AREA */
+        .input-container {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: white;
+            padding: 8px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 1px solid var(--sakura);
+        }
+
+        input {
+            flex: 1;
+            border: none;
+            padding: 12px 15px;
+            font-size: 1rem;
+            outline: none;
+            background: transparent;
+            font-family: inherit;
+        }
+
+        button {
+            background: var(--indigo);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:active { transform: scale(0.9); background: var(--sakura-dark); }
+
+        /* LOADING ANIMATION */
+        .typing {
+            font-size: 0.8rem;
+            color: #b2bec3;
+            margin-bottom: 10px;
+            display: none;
+            padding-left: 20px;
+        }
+
+        /* CUSTOM SCROLLBAR */
+        #chat-window::-webkit-scrollbar { width: 5px; }
+        #chat-window::-webkit-scrollbar-thumb { background: var(--sakura); border-radius: 10px; }
     </style>
 </head>
 <body>
-    <div class="chat-box">
-        <header>🌸 HIKARITUTOR SENSEI</header>
-        <div id="chat-window">
-            <div class="bubble sensei">こんにちは！ (Konnichiwa!) Ada kalimat Bahasa Jepang yang ingin kamu pelajari hari ini?</div>
+
+<div class="app-container">
+    <header>
+        <div class="avatar">光</div>
+        <div class="status-info">
+            <h1>HikariTutor</h1>
+            <p><span class="status-dot"></span> Sensei sedang Online</p>
         </div>
-        <div class="input-area">
-            <input type="text" id="userInput" placeholder="Ketik kalimat di sini..." onkeypress="if(event.key==='Enter') sendMessage()">
-            <button onclick="sendMessage()">Kirim</button>
+    </header>
+
+    <div id="chat-window">
+        <div class="bubble sensei">
+            こんにちは！ (Konnichiwa!) <br>
+            Saya **Hikari Sensei**. Ada kalimat Bahasa Jepang yang ingin kamu diskusikan hari ini? ✨
         </div>
     </div>
 
-    <script>
-        async function sendMessage() {
-            const input = document.getElementById('userInput');
-            const chatWindow = document.getElementById('chat-window');
-            const text = input.value.trim();
-            if (!text) return;
+    <div id="typing-indicator" class="typing">Sensei sedang menulis...</div>
 
-            chatWindow.innerHTML += `<div class="bubble user">${text}</div>`;
-            input.value = '';
-            chatWindow.scrollTop = chatWindow.scrollHeight;
+    <div class="input-container">
+        <input type="text" id="userInput" placeholder="Tanya Sensei..." autocomplete="off" onkeypress="if(event.key==='Enter') sendMessage()">
+        <button onclick="sendMessage()">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+        </button>
+    </div>
+</div>
 
-            try {
-                // Fetch ke API internal Render
-                const response = await fetch("/api/chat", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ message: text })
-                });
-                
-                const data = await response.json();
-                const formatted = marked.parse(data.reply);
-                chatWindow.innerHTML += `<div class="bubble sensei">${formatted}</div>`;
-            } catch (e) {
-                chatWindow.innerHTML += `<div class="bubble sensei" style="color: #ff4757;">Aduh, server sedang istirahat. Coba lagi ya!</div>`;
-            }
+<script>
+    async function sendMessage() {
+        const input = document.getElementById('userInput');
+        const chatWindow = document.getElementById('chat-window');
+        const typing = document.getElementById('typing-indicator');
+        const text = input.value.trim();
+        
+        if (!text) return;
+
+        // User Bubble
+        chatWindow.innerHTML += `<div class="bubble user">${text}</div>`;
+        input.value = '';
+        typing.style.display = 'block';
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        try {
+            const response = await fetch("/api/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: text })
+            });
+            
+            const data = await response.json();
+            const formatted = marked.parse(data.reply);
+            
+            chatWindow.innerHTML += `<div class="bubble sensei">${formatted}</div>`;
+        } catch (e) {
+            chatWindow.innerHTML += `<div class="bubble sensei" style="color: #ff7675;">Gomen! Sepertinya ada gangguan koneksi. 🌸</div>`;
+        } finally {
+            typing.style.display = 'none';
             chatWindow.scrollTop = chatWindow.scrollHeight;
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>
