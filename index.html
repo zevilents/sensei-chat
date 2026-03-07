@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>HikariTutor - Classic Edition</title>
+    <title>HikariTutor - Summer Music Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Noto+Sans+JP:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <script src="https://elfsightcdn.com/platform.js" async></script>
+
     <style>
         :root {
             --sky: #7ed6df; --deep: #22a6b3; --sun: #f9ca24;
@@ -45,14 +48,14 @@
         .nav-btn {
             background: var(--sun); color: white; border: none; padding: 7px 12px;
             border-radius: 15px; font-weight: bold; font-family: 'Fredoka One'; font-size: 0.7rem;
-            cursor: pointer; box-shadow: 0 3px 0 #d35400; transition: 0.2s;
+            cursor: pointer; box-shadow: 0 3px 0 #d35400;
         }
         .nav-btn.quiz { background: var(--deep); box-shadow: 0 3px 0 #1a7d8b; }
         .nav-btn:active { transform: translateY(2px); box-shadow: none; }
 
         #chat-window { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
 
-        /* RUBY STYLE (Romaji di atas) */
+        /* RUBY STYLE (Romaji di atas Kanji) */
         ruby { ruby-position: over; ruby-align: center; }
         rt { font-size: 0.65rem; color: var(--deep); font-weight: 700; font-family: 'Poppins', sans-serif; padding-bottom: 1px; }
 
@@ -81,8 +84,8 @@
         .c-jp { font-size: 1.2rem; font-weight: bold; color: var(--dark); }
         .c-ro { font-size: 0.65rem; color: var(--deep); font-weight: bold; text-transform: uppercase; }
 
-        /* --- INPUT --- */
-        .input-bar { padding: 15px; background: white; border-top: 1px solid #eee; padding-bottom: calc(15px + env(safe-area-inset-bottom)); }
+        /* --- INPUT AREA --- */
+        .input-bar { padding: 15px; background: white; border-top: 1px solid #eee; flex-shrink: 0; padding-bottom: calc(15px + env(safe-area-inset-bottom)); }
         .input-group { background: #f1f2f6; border-radius: 30px; display: flex; align-items: center; border: 2px solid var(--sky); padding: 5px; }
         input { flex: 1; border: none; padding: 10px 15px; outline: none; font-size: 1rem; background: transparent; font-family: inherit; }
         button#sendBtn { background: var(--sun); color: white; border: none; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
@@ -90,6 +93,11 @@
         #loading { align-self: flex-start; background: white; padding: 8px 15px; border-radius: 15px; display: none; align-items: center; gap: 10px; border: 2px solid var(--sun); margin-bottom: 5px; }
         .shuriken { width: 20px; height: 20px; background: var(--sun); clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Posisi Widget Elfsight agar tidak menutupi Input Chat */
+        .elfsight-app-c7fb5b15-6956-4f7e-93e7-7f6bd801fb5e {
+            margin-bottom: 80px; /* Memberi ruang di atas input bar */
+        }
     </style>
 </head>
 <body>
@@ -112,12 +120,14 @@
     </header>
 
     <div id="chat-window">
-        <div class="bubble sensei">Ohayou! ☀️ Sensei sudah merapikan aplikasi. Klik **📑 KANA** untuk tabel lengkap atau kita bisa lanjut ngobrol!</div>
+        <div class="bubble sensei">Ohayou! ☀️ Belajar jadi makin asyik dengan musik lofi. Silakan dengarkan sambil kita bedah kalimat Jepang ya! 🎶</div>
     </div>
 
     <div id="loading"><div class="shuriken"></div><span style="font-size:0.8rem; font-weight:bold; color:var(--deep);">Thinking...</span></div>
 
     <div class="input-bar">
+        <div class="elfsight-app-c7fb5b15-6956-4f7e-93e7-7f6bd801fb5e" data-elfsight-app-lazy></div>
+        
         <div class="input-group">
             <input type="text" id="userInput" placeholder="Tanya sesuatu..." autocomplete="off" onkeypress="if(event.key==='Enter') sendMessage()">
             <button id="sendBtn" onclick="sendMessage()">⚡</button>
@@ -132,8 +142,7 @@
             </div>
             <button onclick="toggleModal('kanaModal')" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">✕</button>
         </div>
-        <div class="modal-body" id="kanaContent">
-            </div>
+        <div class="modal-body" id="kanaContent"></div>
     </div>
 
     <div id="quizModal" class="modal">
@@ -142,7 +151,7 @@
             <button onclick="toggleModal('quizModal')" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">✕</button>
         </div>
         <div class="modal-body">
-            <p style="text-align:center;">Fitur Kuis sedang aktif! Silakan pilih mode latihan di chat atau tutup untuk lanjut.</p>
+            <p style="text-align:center;">Asah kemampuanmu lewat kuis seru! (Fitur Kuis Aktif)</p>
         </div>
     </div>
 </div>
@@ -151,14 +160,14 @@
     // DATA KANA LENGKAP
     const KANA_DATA = {
         hira: {
-            seion: [['あ','a'],['い','i'],['う','u'],['え','e'],['お','o'],['か','ka'],['き','ki'],['く','ku'],['け','ke'],['こ','ko'],['さ','sa'],['し','shi'],['す','su'],['せ','se'],['そ','so'],['た','ta'],['ち','chi'],['つ','tsu'],['て','te'],['と','to'],['な','na'],['に','ni'],['ぬ','nu'],['ね','ne'],['の','no'],['は','ha'],['ひ','hi'],['ふ','fu'],['へ','he'],['ほ','ho'],['ま','ma'],['み','mi'],['む','mu'],['め','me'],['も','mo'],['や','ya'],['',''],['ゆ','yu'],['',''],['よ','yo'],['ら','ra'],['り','ri'],['る','ru'],['れ','re'],['ろ','ro'],['わ','wa'],['',''],['を','wo'],['',''],['ん','n']],
-            dakuon: [['が','ga'],['ぎ','gi'],['ぐ','gu'],['げ','ge'],['ご','go'],['ざ','za'],['じ','ji'],['ず','zu'],['ぜ','ze'],['ぞ','zo'],['だ','da'],['ぢ','ji'],['づ','zu'],['det','de'],['ど','do'],['ば','ba'],['び','bi'],['ぶ','bu'],['べ','be'],['ぼ','bo'],['ぱ','pa'],['ぴ','pi'],['ぷ','pu'],['ぺ','pe'],['ぽ','po']],
-            youon: [['きゃ','kya'],['きゅ','kyu'],['きょ','kyo'],['しゃ','sha'],['しゅ','shu'],['しょ','sho'],['ちゃ','cha'],['ちゅ','chu'],['ちょ','cho']]
+            seion: [['あ','a'],['い','i'],['う','u'],['え','e'],['お','o'],['か','ka'],['き','ki'],['く','ku'],['け','ke'],['こ','ko'],['さ','sa'],['し','shi'],['す','su'],['せ','se'],['そ','so'],['た','ta'],['ち','chi'],['つ','tsu'],['て','te'],['と','to'],['な','na'],['に','ni'],['ぬ','nu'],['ね','ne'],['の','no'],['は','ha'],['ひ','hi'],['ふ','fu'],['へ','he'],['ほ','ho'],['ま','ma'],['み','mi'],['む','mu'],['め','me'],['も','mo'],['야','ya'],['',''],['ゆ','yu'],['',''],['よ','yo'],['ら','ra'],['り','ri'],['る','ru'],['れ','re'],['ろ','ro'],['わ','wa'],['',''],['を','wo'],['',''],['ん','n']],
+            dakuon: [['が','ga'],['ぎ','gi'],['ぐ','gu'],['げ','ge'],['ご','go'],['ざ','za'],['じ','ji'],['ず','zu'],['ぜ','ze'],['ぞ','zo'],['だ','da'],['ぢ','ji'],['づ','zu'],['で','de'],['ど','do'],['ば','ba'],['び','bi'],['ぶ','bu'],['べ','be'],['ぼ','bo'],['ぱ','pa'],['ぴ','pi'],['ぷ','pu'],['ぺ','pe'],['ぽ','po']],
+            youon: [['きゃ','kya'],['きゅ','kyu'],['きょ','kyo'],['しゃ','sha'],['しゅ','shu'],['しょ','sho']]
         },
         kata: {
             seion: [['ア','a'],['イ','i'],['ウ','u'],['エ','e'],['オ','o'],['カ','ka'],['キ','ki'],['ク','ku'],['ケ','ke'],['コ','ko'],['サ','sa'],['シ','shi'],['ス','su'],['セ','se'],['ソ','so'],['タ','ta'],['チ','chi'],['ツ','tsu'],['テ','te'],['ト','to'],['ナ','na'],['ニ','ni'],['ヌ','nu'],['ネ','ne'],['ノ','no'],['ハ','ha'],['ヒ','hi'],['フ','fu'],['ヘ','he'],['ホ','ho'],['マ','ma'],['ミ','mi'],['ム','mu'],['メ','me'],['モ','mo'],['ヤ','ya'],['',''],['ユ','yu'],['',''],['ヨ','yo'],['ラ','ra'],['リ','ri'],['ル','ru'],['レ','re'],['ロ','ro'],['ワ','wa'],['',''],['ヲ','wo'],['',''],['ン','n']],
-            dakuon: [['ガ','ga'],['ギ','gi'],['グ','gu'],['ゲ','ge'],['ゴ','go'],['ザ','za'],['ジ','ji'],['ズ','zu'],['ゼ','ze'],['ゾ','zo'],['ダ','da'],['ヂ','ji'],['ヅ','zu'],['デ','de'],['ド','do'],['バ','ba'],['ビ','bi'],['ブ','bu'],['ベ','be'],['ボ','bo'],['パ','pa'],['ピ','pi'],['プ','pu'],['ペ','pe'],['ポ','po']],
-            youon: [['キャ','kya'],['キュ','kyu'],['キョ','kyo'],['シャ','sha'],['シュ','shu'],['ショ','sho'],['チャ','cha'],['チュ','chu'],['チョ','cho']]
+            dakuon: [['ガ','ga'],['ギ','gi'],['グ','gu'],['ゲ','ge'],['ゴ','go'],['ザ','za'],['ジ','ji'],['ズ','zu'],['ゼ','ze'],['ゾ','zo'],['ダ','da'],['ヂ','ji'],['ヅ','zu'],['デ','de'],['ド','do'],['バ','ba'],['ビ','bi'],['ブ','bu'],['ベ','be'],['ボ','bo'],['パ','pa'],['ピ','pi'],['プ','pu'],['ぺ','pe'],['ポ','po']],
+            youon: [['キャ','kya'],['キュ','kyu'],['キョ','kyo'],['シャ','sha'],['シュ','shu'],['ショ','sho']]
         }
     };
 
@@ -172,14 +181,11 @@
     function renderKana(type) {
         const container = document.getElementById('kanaContent');
         const data = KANA_DATA[type];
-        
         let html = `
             <div class="section-title">SEION (Dasar)</div>
             <div class="grid-kana">${data.seion.map(i => `<div class="card"><span class="c-jp">${i[0]}</span><span class="c-ro">${i[1]}</span></div>`).join('')}</div>
-            
             <div class="section-title">DAKUON & HANDAKUON</div>
             <div class="grid-kana">${data.dakuon.map(i => `<div class="card"><span class="c-jp">${i[0]}</span><span class="c-ro">${i[1]}</span></div>`).join('')}</div>
-            
             <div class="section-title">YOUON (Kombinasi)</div>
             <div class="grid-youon">${data.youon.map(i => `<div class="card"><span class="c-jp">${i[0]}</span><span class="c-ro">${i[1]}</span></div>`).join('')}</div>
         `;
@@ -207,9 +213,7 @@
                 body: JSON.stringify({ message: text })
             });
             const data = await res.json();
-            // Mengubah format Kanji[romaji] menjadi tag Ruby
             const rubyText = data.reply.replace(/(\S+)\[([^\]]+)\]/g, '<ruby>$1<rt>$2</rt></ruby>');
-            
             load.style.display = 'none';
             chat.innerHTML += `<div class="bubble sensei">${marked.parse(rubyText)}</div>`;
         } catch (e) {
@@ -221,7 +225,7 @@
 
     // Sakura Animation
     const sakura = document.getElementById('sakura');
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 12; i++) {
         const p = document.createElement('div');
         p.className = 'petal';
         p.style.left = Math.random() * 100 + 'vw';
