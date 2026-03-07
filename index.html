@@ -3,140 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sensei Chat - HikariTutor</title>
+    <title>HikariTutor - Sensei Chat</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        :root {
-            --primary: #ff4757;
-            --bg-dark: #1e272e;
-            --chat-bg: #2f3542;
-            --text-light: #f1f2f6;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .chat-container {
-            width: 100%;
-            max-width: 600px; /* Diperlebar sedikit agar nyaman membaca bedah kalimat */
-            background-color: var(--chat-bg);
-            border-radius: 12px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            display: flex;
-            flex-direction: column;
-            height: 90vh;
-            overflow: hidden;
-            border: 1px solid #57606f;
-        }
-
-        header {
-            background-color: var(--primary);
-            padding: 15px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            letter-spacing: 1px;
-        }
-
-        #chat-window {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .bubble {
-            max-width: 90%;
-            padding: 12px 16px;
-            border-radius: 10px;
-            line-height: 1.6;
-        }
-
-        /* Styling agar Markdown tampil cantik di dalam bubble */
-        .bubble h1, .bubble h2, .bubble h3 { margin: 10px 0 5px 0; font-size: 1.1rem; color: #fffa65; }
-        .bubble p { margin: 5px 0; }
-        .bubble ul, .bubble ol { padding-left: 20px; margin: 5px 0; }
-        .bubble hr { border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 10px 0; }
-
-        .user { align-self: flex-end; background-color: var(--primary); color: white; border-bottom-right-radius: 0; }
-        .sensei { align-self: flex-start; background-color: #57606f; color: white; border-bottom-left-radius: 0; }
-
+        :root { --primary: #ff4757; --dark: #1e272e; --bubble-sensei: #2f3542; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; margin: 0; display: flex; justify-content: center; height: 100vh; }
+        .chat-box { width: 100%; max-width: 500px; display: flex; flex-direction: column; background: #2f3542; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        header { background: var(--primary); padding: 15px; text-align: center; font-weight: bold; font-size: 1.2rem; }
+        #chat-window { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        .bubble { max-width: 85%; padding: 12px 16px; border-radius: 15px; line-height: 1.6; }
+        .bubble h3 { color: #fffa65; font-size: 1rem; margin: 10px 0 5px 0; }
+        .user { align-self: flex-end; background: var(--primary); border-bottom-right-radius: 2px; }
+        .sensei { align-self: flex-start; background: #57606f; border-bottom-left-radius: 2px; }
         .input-area { display: flex; padding: 15px; background: #2f3542; border-top: 1px solid #57606f; }
-        input { flex: 1; padding: 12px; border-radius: 20px; border: none; background: #1e272e; color: white; outline: none; padding-left: 15px;}
-        button { margin-left: 10px; padding: 10px 20px; border-radius: 20px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; }
-        
-        .loading { font-size: 0.8rem; color: #a4b0be; padding-left: 20px; display: none; padding-bottom: 10px;}
+        input { flex: 1; padding: 12px; border-radius: 25px; border: none; background: #1e272e; color: white; outline: none; }
+        button { margin-left: 10px; padding: 10px 20px; border-radius: 25px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
-
-<div class="chat-container">
-    <header>🌸 SENSEI CHAT</header>
-    <div id="chat-window">
-        <div class="bubble sensei">
-            こんにちは！ (Konnichiwa!)<br>
-            Ada yang ingin ditanyakan tentang bahasa Jepang hari ini?
+    <div class="chat-box">
+        <header>🌸 HIKARITUTOR SENSEI</header>
+        <div id="chat-window">
+            <div class="bubble sensei">こんにちは！ (Konnichiwa!) Ada kalimat Bahasa Jepang yang ingin kamu pelajari hari ini?</div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Ketik kalimat di sini..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <button onclick="sendMessage()">Kirim</button>
         </div>
     </div>
-    <div id="loading" class="loading">Sensei sedang mengetik balasan...</div>
-    <div class="input-area">
-        <input type="text" id="userInput" placeholder="Tanya Sensei di sini..." onkeypress="if(event.key==='Enter') sendMessage()">
-        <button id="sendBtn" onclick="sendMessage()">Kirim</button>
-    </div>
-</div>
 
-<script>
-    async function sendMessage() {
-        const input = document.getElementById('userInput');
-        const chatWindow = document.getElementById('chat-window');
-        const btn = document.getElementById('sendBtn');
-        const loading = document.getElementById('loading');
-        const text = input.value.trim();
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const chatWindow = document.getElementById('chat-window');
+            const text = input.value.trim();
+            if (!text) return;
 
-        if (!text) return;
+            chatWindow.innerHTML += `<div class="bubble user">${text}</div>`;
+            input.value = '';
+            chatWindow.scrollTop = chatWindow.scrollHeight;
 
-        // Tampilkan pesan User
-        chatWindow.innerHTML += `<div class="bubble user">${text}</div>`;
-        input.value = '';
-        btn.disabled = true;
-        loading.style.display = 'block';
-        chatWindow.scrollTop = chatWindow.scrollHeight;
-
-        try {
-            const response = await fetch("https://sensei-chat.onrender.com/api/chat", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: text })
-            });
-
-            const data = await response.json();
-            
-            // MENGGUNAKAN MARKED UNTUK MERENDER BOLD, HEADER, DLL
-            const formattedReply = marked.parse(data.reply);
-            
-            chatWindow.innerHTML += `<div class="bubble sensei">${formattedReply}</div>`;
-
-        } catch (error) {
-            chatWindow.innerHTML += `<div class="bubble sensei" style="color: #ff4757;">Gomen! Koneksi ke server gagal.</div>`;
-        } finally {
-            btn.disabled = false;
-            loading.style.display = 'none';
+            try {
+                // Fetch ke API internal Render
+                const response = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: text })
+                });
+                
+                const data = await response.json();
+                const formatted = marked.parse(data.reply);
+                chatWindow.innerHTML += `<div class="bubble sensei">${formatted}</div>`;
+            } catch (e) {
+                chatWindow.innerHTML += `<div class="bubble sensei" style="color: #ff4757;">Aduh, server sedang istirahat. Coba lagi ya!</div>`;
+            }
             chatWindow.scrollTop = chatWindow.scrollHeight;
         }
-    }
-</script>
-
+    </script>
 </body>
-
 </html>
-
