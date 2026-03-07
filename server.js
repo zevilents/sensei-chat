@@ -30,7 +30,7 @@ app.post('/api/chat', async (req, res) => {
                 "X-Title": "HikariTutor"
             },
             body: JSON.stringify({
-                "model": "nvidia/nemotron-3-nano-30b-a3b:free",
+                "model": "openrouter/free",
                 "messages": [
                     { 
                         "role": "system", 
@@ -75,4 +75,5 @@ List (-) per kata/partikel dengan format: Kanji[romaji] (Jenis): Arti.
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 HikariTutor Live on port ${PORT}`));
+
 
