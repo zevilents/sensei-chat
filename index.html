@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>HikariTutor - Clean Edition</title>
+    <title>HikariTutor - Focus Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Noto+Sans+JP:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
@@ -35,56 +35,28 @@
         }
 
         header {
-            padding: 12px 20px; background: white; display: flex; align-items: center; justify-content: space-between;
+            padding: 15px 20px; background: white; display: flex; align-items: center; 
             border-bottom: 4px solid var(--sun); flex-shrink: 0;
         }
 
         .header-left { display: flex; align-items: center; gap: 12px; }
-        .avatar { width: 40px; height: 40px; background: var(--sky); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 2px solid white; }
-
-        .kana-toggle {
-            background: var(--sun); color: white; border: none; padding: 8px 15px;
-            border-radius: 20px; font-weight: bold; font-family: 'Fredoka One';
-            cursor: pointer; box-shadow: 0 3px 0 #d35400;
-        }
+        .avatar { width: 40px; height: 40px; background: var(--sky); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 2px solid white; box-shadow: 0 3px 8px rgba(0,0,0,0.1); }
 
         #chat-window { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
 
         .bubble {
-            max-width: 88%; padding: 12px 18px; border-radius: 20px; font-size: 0.95rem;
-            line-height: 1.5; /* Dikembalikan ke normal */
-            animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            max-width: 85%; padding: 12px 18px; border-radius: 20px; font-size: 0.95rem;
+            line-height: 1.5; animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
             box-shadow: 0 3px 12px rgba(0,0,0,0.06);
         }
         @keyframes pop { from { opacity: 0; transform: scale(0.9) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
         .sensei { align-self: flex-start; background: white; border-bottom-left-radius: 2px; border: 1px solid #eee; }
-        .user { align-self: flex-end; background: var(--sky); color: white; border-bottom-right-radius: 2px; }
+        .user { align-self: flex-end; background: var(--sky); color: white; border-bottom-right-radius: 2px; font-weight: 500; }
 
-        /* --- MASTER KANA MODAL --- */
-        #kanaModal {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: white; z-index: 100; display: none; flex-direction: column;
-            animation: slide 0.3s ease-out;
-        }
-        @keyframes slide { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .modal-header { padding: 15px; border-bottom: 2px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-        .tab-group { display: flex; gap: 8px; }
-        .tab-btn { padding: 6px 12px; border: 2px solid var(--sky); border-radius: 12px; font-weight: bold; font-size: 0.8rem; background: transparent; cursor: pointer; }
-        .tab-btn.active { background: var(--sky); color: white; }
-
-        .kana-content { flex: 1; overflow-y: auto; padding: 15px; }
-        .section-title { font-family: 'Fredoka One'; color: var(--deep); font-size: 1rem; margin: 15px 0 10px; border-bottom: 2px dashed var(--sky); padding-bottom: 5px; }
-        .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-        .card { background: #f8f9fa; border: 1px solid #eee; border-radius: 8px; padding: 8px 2px; text-align: center; display: flex; flex-direction: column; }
-        .c-jp { font-size: 1.1rem; font-weight: bold; color: var(--dark); }
-        .c-ro { font-size: 0.65rem; color: var(--deep); font-weight: bold; text-transform: uppercase; }
-
-        /* --- INPUT --- */
         .input-bar { padding: 15px; background: white; border-top: 1px solid #eee; padding-bottom: calc(15px + env(safe-area-inset-bottom)); }
         .input-group { background: #f1f2f6; border-radius: 30px; display: flex; align-items: center; border: 2px solid var(--sky); padding: 5px; }
-        input { flex: 1; border: none; padding: 10px 15px; outline: none; font-size: 1rem; background: transparent; }
+        input { flex: 1; border: none; padding: 10px 15px; outline: none; font-size: 1rem; background: transparent; font-family: inherit; }
         button#sendBtn { background: var(--sun); color: white; border: none; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
 
         #loading { align-self: flex-start; background: white; padding: 8px 15px; border-radius: 15px; display: none; align-items: center; gap: 10px; border: 2px solid var(--sun); margin-bottom: 5px; }
@@ -104,71 +76,58 @@
         <div class="header-left">
             <div class="avatar">🏯</div>
             <div>
-                <h1 style="font-family:'Fredoka One'; font-size:1rem; margin:0; color:var(--deep);">HIKARI TUTOR</h1>
-                <p style="color:#27ae60; font-size:0.65rem; margin:0; font-weight:bold;">● Active</p>
+                <h1 style="font-family:'Fredoka One'; font-size:1.1rem; margin:0; color:var(--deep);">HIKARI TUTOR</h1>
+                <p style="color:#27ae60; font-size:0.7rem; margin:0; font-weight:bold;">● Online</p>
             </div>
         </div>
-        <button class="kana-toggle" onclick="toggleKana()">📑 KANA</button>
     </header>
 
     <div id="chat-window">
-        <div class="bubble sensei">Ohayou! ☀️ Tampilan sekarang sudah lebih bersih tanpa Furigana. Apa yang mau kita pelajari hari ini?</div>
+        <div class="bubble sensei">Ohayou! ☀️ Saya **Hikari Sensei**. Mari kita ngobrol dan belajar bahasa Jepang bersama. Apa yang ingin kamu tanyakan?</div>
     </div>
 
     <div id="loading"><div class="shuriken"></div><span style="font-size:0.8rem; font-weight:bold; color:var(--deep);">Thinking...</span></div>
 
     <div class="input-bar">
         <div class="input-group">
-            <input type="text" id="userInput" placeholder="Tanya sesuatu..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <input type="text" id="userInput" placeholder="Ketik pesan..." autocomplete="off" onkeypress="if(event.key==='Enter') sendMessage()">
             <button id="sendBtn" onclick="sendMessage()">⚡</button>
         </div>
-    </div>
-
-    <div id="kanaModal">
-        <div class="modal-header">
-            <div class="tab-group">
-                <button class="tab-btn active" id="btnHira" onclick="renderKana('hira')">あ HIRAGANA</button>
-                <button class="tab-btn" id="btnKata" onclick="renderKana('kata')">ア KATAKANA</button>
-            </div>
-            <button onclick="toggleKana()" style="background:none; border:none; font-size:1.5rem;">✕</button>
-        </div>
-        <div class="kana-content" id="kanaContent"></div>
     </div>
 </div>
 
 <script>
-    const KANA_DATA = { /* ... tetap sama ... */ };
-    // (Data Kana lengkap ada di turn sebelumnya, silakan masukkan kembali di sini)
-
-    function toggleKana() {
-        const m = document.getElementById('kanaModal');
-        const isShow = m.style.display !== 'flex';
-        m.style.display = isShow ? 'flex' : 'none';
-        if(isShow) renderKana('hira');
-    }
-
-    function renderKana(type) {
-        // (Logika render kana tetap sama dengan turn sebelumnya)
-    }
-
     async function sendMessage() {
         const input = document.getElementById('userInput'), chat = document.getElementById('chat-window'), load = document.getElementById('loading');
         const text = input.value.trim(); if(!text) return;
+
         chat.innerHTML += `<div class="bubble user">${text}</div>`;
         input.value = ''; chat.appendChild(load); load.style.display = 'flex'; chat.scrollTop = chat.scrollHeight;
-        
+
         try {
-            const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: text }) });
+            const res = await fetch("/api/chat", { 
+                method: "POST", 
+                headers: { "Content-Type": "application/json" }, 
+                body: JSON.stringify({ message: text }) 
+            });
             const data = await res.json();
-            
-            // FITUR RUBY/FURIGANA DIHAPUS - Langsung render sebagai markdown
             load.style.display = 'none';
             chat.innerHTML += `<div class="bubble sensei">${marked.parse(data.reply)}</div>`;
-        } catch (e) { load.style.display = 'none'; chat.innerHTML += `<div class="bubble sensei">Error! 🌸</div>`; }
+        } catch (e) { 
+            load.style.display = 'none'; 
+            chat.innerHTML += `<div class="bubble sensei">Gomen, koneksi terputus! 🌸</div>`; 
+        }
         chat.scrollTop = chat.scrollHeight;
     }
 
-    // Sakura Animation logic (tetap ada agar estetik)
+    // Sakura Animation
+    const s = document.getElementById('sakura');
+    for (let i = 0; i < 15; i++) {
+        const p = document.createElement('div'); p.className = 'petal';
+        p.style.left = Math.random() * 100 + 'vw'; p.style.width = p.style.height = Math.random() * 8 + 6 + 'px';
+        p.style.animationDuration = Math.random() * 3 + 4 + 's'; p.style.animationDelay = Math.random() * 5 + 's';
+        s.appendChild(p);
+    }
 </script>
 </body>
 </html>
