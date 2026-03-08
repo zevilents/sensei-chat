@@ -12,7 +12,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f0f2f5; /* Warna background aplikasi modern */
+            background-color: #f0f2f5;
             margin: 0; display: flex; justify-content: center;
             height: 100dvh; overflow: hidden; color: #1c1e21;
         }
@@ -25,12 +25,12 @@
 
         /* --- SCREEN SYSTEM --- */
         .screen {
-            display: none; /* Sembunyikan semua layar secara default */
+            display: none;
             flex-direction: column;
             height: 100%;
             width: 100%;
         }
-        .screen.active { display: flex; } /* Tampilkan hanya yang aktif */
+        .screen.active { display: flex; }
 
         /* --- GLOBAL HEADER --- */
         header {
@@ -96,6 +96,9 @@
         .bubble p { margin: 0 0 6px 0; } .bubble p:last-of-type { margin-bottom: 0; }
         .bubble strong { font-weight: 600; }
         .bubble ul, .bubble ol { margin: 6px 0; padding-left: 20px; } .bubble li { margin-bottom: 4px; }
+        .bubble table { border-collapse: collapse; width: 100%; margin: 8px 0; display: block; overflow-x: auto; white-space: nowrap; background-color: rgba(0,0,0,0.02); border-radius: 6px; }
+        .bubble th, .bubble td { border: 1px solid #e0e0e0; padding: 6px 10px; text-align: left; font-size: 14px; }
+        .bubble th { background-color: rgba(0,0,0,0.05); font-weight: 600; }
 
         .input-bar {
             background: #ffffff; padding: 8px 12px; display: flex; align-items: flex-end; gap: 10px;
@@ -106,46 +109,75 @@
         .send-btn {
             background: #3390ec; color: white; border: none; width: 40px; height: 40px; border-radius: 50%;
             cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+            transition: transform 0.1s;
         }
+        .send-btn:active { transform: scale(0.95); }
 
         #chat-loading { align-self: flex-start; background: transparent; padding: 2px 15px; display: none; font-size: 13px; color: #3390ec; font-weight: 500; margin-bottom: 5px; }
 
 
         /* =========================================
-           SCREEN 3: NUANCE COMPARATOR
+           SCREEN 3: NUANCE COMPARATOR (REVAMPED UI)
            ========================================= */
         #compare-screen { background-color: #f8f9fa; }
         .compare-container { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
         
-        .compare-box { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #eee; }
-        .compare-box h2 { margin: 0 0 15px 0; font-size: 16px; color: #1c1e21; text-align: center; }
+        .compare-box { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        .compare-box h2 { margin: 0 0 20px 0; font-size: 18px; color: #1c1e21; text-align: center; font-weight: 700; }
         
-        .input-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 15px; }
+        .input-row { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 20px; }
         .input-row input {
-            flex: 1; padding: 12px; border: 2px solid #e4e6eb; border-radius: 10px;
-            font-size: 16px; text-align: center; outline: none; transition: 0.2s;
+            flex: 1; padding: 14px; border: 2px solid #e4e6eb; border-radius: 12px;
+            font-size: 16px; text-align: center; outline: none; transition: 0.2s; background: #f8f9fa;
         }
-        .input-row input:focus { border-color: #e67e22; }
-        .vs-badge { background: #e67e22; color: white; font-weight: bold; font-size: 12px; padding: 5px 10px; border-radius: 20px; }
+        .input-row input:focus { border-color: #e67e22; background: #fff; }
+        .vs-badge { background: #e67e22; color: white; font-weight: 800; font-size: 14px; padding: 8px 12px; border-radius: 50%; box-shadow: 0 2px 5px rgba(230, 126, 34, 0.3); }
 
         .compare-btn {
-            width: 100%; background: #e67e22; color: white; border: none; padding: 14px;
-            border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s;
+            width: 100%; background: #e67e22; color: white; border: none; padding: 16px;
+            border-radius: 12px; font-size: 18px; font-weight: 700; cursor: pointer; transition: 0.2s;
+            box-shadow: 0 4px 10px rgba(230, 126, 34, 0.2);
         }
-        .compare-btn:active { background: #d35400; }
+        .compare-btn:active { transform: scale(0.98); background: #d35400; }
 
-        #compare-loading { display: none; text-align: center; color: #e67e22; font-size: 14px; font-weight: 500; padding: 20px; }
+        #compare-loading { display: none; text-align: center; color: #e67e22; font-size: 16px; font-weight: 500; padding: 30px; }
 
+        /* --- RESULT BOX YANG SUDAH DIRAPIKAN --- */
         .result-box {
-            background: white; padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border: 1px solid #eee; display: none; font-size: 15px; line-height: 1.6;
+            background: white;
+            padding: 30px; /* Padding lebih besar agar lega */
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border: 1px solid #eee;
+            display: none;
+            font-size: 15px;
+            line-height: 1.7; /* Jarak antar baris lebih nyaman */
+            color: #333;
         }
-        /* Result Markdown Styling */
-        .result-box h3 { margin: 0 0 10px 0; color: #e67e22; font-size: 18px; }
-        .result-box p { margin: 0 0 10px 0; }
-        .result-box ul { margin: 0 0 15px 0; padding-left: 20px; }
-        .result-box li { margin-bottom: 5px; }
-        .result-box strong { color: #1c1e21; }
+
+        /* Styling Judul Poin (misal: "1. Makna Dasar:") */
+        .result-box strong {
+            color: #e67e22;
+            font-size: 17px;
+            font-weight: 700;
+            display: block;
+            margin-top: 25px;
+            margin-bottom: 12px;
+        }
+        /* Judul pertama tidak perlu margin atas */
+        .result-box p:first-child strong { margin-top: 0; }
+
+        /* Styling Paragraf & List */
+        .result-box p { margin: 0 0 15px 0; }
+        .result-box ul { margin: 10px 0 25px 0; padding-left: 25px; }
+        .result-box li { margin-bottom: 10px; }
+
+        /* Styling Garis Pemisah (HR) agar lebih halus */
+        .result-box hr {
+            border: none;
+            border-top: 1px solid #f0f0f0; /* Warna abu sangat muda */
+            margin: 25px 0;
+        }
 
         /* HIDDEN MUSIC */
         .elfsight-app-c7fb5b15-6956-4f7e-93e7-7f6bd801fb5e { display: none !important; }
@@ -171,7 +203,6 @@
                     <p>Bedah kosakata dan kalimat bahasa Jepang</p>
                 </div>
             </div>
-
             <div class="menu-card" onclick="navTo('compare-screen')">
                 <div class="menu-icon icon-compare">⚖️</div>
                 <div class="menu-text">
@@ -181,7 +212,6 @@
             </div>
         </div>
     </div>
-
 
     <div id="chat-screen" class="screen">
         <header>
@@ -203,9 +233,7 @@
                 <span class="time" id="initTime"></span>
             </div>
         </div>
-
         <div id="chat-loading">typing...</div>
-
         <div class="input-bar">
             <div class="input-wrapper">
                 <input type="text" id="chatInput" placeholder="Message" autocomplete="off" onkeypress="if(event.key==='Enter') sendChat()">
@@ -215,7 +243,6 @@
             </button>
         </div>
     </div>
-
 
     <div id="compare-screen" class="screen">
         <header>
@@ -230,121 +257,55 @@
 
         <div class="compare-container">
             <div class="compare-box">
-                <h2>Masukkan Kata:</h2>
+                <h2>Bandingkan Kata:</h2>
                 <div class="input-row">
-                    <input type="text" id="wordA" placeholder="Contoh: 見る">
+                    <input type="text" id="wordA" placeholder="Contoh: 熱い">
                     <div class="vs-badge">VS</div>
-                    <input type="text" id="wordB" placeholder="Contoh: 見学">
+                    <input type="text" id="wordB" placeholder="Contoh: 厚い">
                 </div>
                 <button class="compare-btn" onclick="sendCompare()">Bandingkan Nuansa</button>
             </div>
-
-            <div id="compare-loading">Mengalisis Nuansa... ⚖️</div>
-            
-            <div class="result-box" id="compareResult">
-                </div>
+            <div id="compare-loading">Sedang menganalisis nuansa... ⚖️</div>
+            <div class="result-box" id="compareResult"></div>
         </div>
     </div>
 
 </div>
 
 <script>
-    // Set inisial waktu chat
     document.getElementById('initTime').innerText = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    function getTime() { return new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }); }
 
-    function getTime() {
-        return new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-    }
-
-    // --- NAVIGATION LOGIC ---
     function navTo(screenId) {
-        // Sembunyikan semua screen
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        // Tampilkan screen yang diminta
         document.getElementById(screenId).classList.add('active');
     }
 
-    // --- CHAT LOGIC (Hikari Sensei) ---
     async function sendChat() {
-        const input = document.getElementById('chatInput');
-        const chat = document.getElementById('chat-window');
-        const load = document.getElementById('chat-loading');
-        const text = input.value.trim(); 
-        
+        const input = document.getElementById('chatInput'), chat = document.getElementById('chat-window'), load = document.getElementById('chat-loading'), text = input.value.trim();
         if(!text) return;
-
-        chat.innerHTML += `
-            <div class="bubble user">
-                <p>${text}</p>
-                <span class="time">${getTime()}</span>
-            </div>
-        `;
-        
-        input.value = ''; 
-        chat.appendChild(load); 
-        load.style.display = 'block'; 
-        chat.scrollTop = chat.scrollHeight;
-
+        chat.innerHTML += `<div class="bubble user"><p>${text}</p><span class="time">${getTime()}</span></div>`;
+        input.value = ''; chat.appendChild(load); load.style.display = 'block'; chat.scrollTop = chat.scrollHeight;
         try {
-            // Memanggil endpoint chat biasa (PATEN PROMPT)
-            const res = await fetch("/api/chat", { 
-                method: "POST", 
-                headers: { "Content-Type": "application/json" }, 
-                body: JSON.stringify({ message: text }) 
-            });
+            const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: text }) });
             const data = await res.json();
-            
             load.style.display = 'none';
-            chat.innerHTML += `
-                <div class="bubble sensei">
-                    ${marked.parse(data.reply)}
-                    <span class="time">${getTime()}</span>
-                </div>
-            `;
-        } catch (e) { 
-            load.style.display = 'none'; 
-            chat.innerHTML += `<div class="bubble sensei"><p>Koneksi terputus.</p><span class="time">${getTime()}</span></div>`; 
-        }
+            chat.innerHTML += `<div class="bubble sensei">${marked.parse(data.reply)}<span class="time">${getTime()}</span></div>`;
+        } catch (e) { load.style.display = 'none'; chat.innerHTML += `<div class="bubble sensei"><p>Gagal mengirim pesan.</p><span class="time">${getTime()}</span></div>`; }
         chat.scrollTop = chat.scrollHeight;
     }
 
-    // --- NUANCE COMPARATOR LOGIC ---
     async function sendCompare() {
-        const wordA = document.getElementById('wordA').value.trim();
-        const wordB = document.getElementById('wordB').value.trim();
-        const resultBox = document.getElementById('compareResult');
-        const load = document.getElementById('compare-loading');
-
-        if(!wordA || !wordB) {
-            alert("Harap isi kedua kata yang ingin dibandingkan!");
-            return;
-        }
-
-        // Format pesan yang dikirim ke AI
-        const promptText = `Tolong bandingkan nuansa antara kata "${wordA}" dan "${wordB}".`;
-
-        resultBox.style.display = 'none';
-        load.style.display = 'block';
-
+        const wordA = document.getElementById('wordA').value.trim(), wordB = document.getElementById('wordB').value.trim();
+        const resultBox = document.getElementById('compareResult'), load = document.getElementById('compare-loading');
+        if(!wordA || !wordB) { alert("Harap isi kedua kata!"); return; }
+        resultBox.style.display = 'none'; load.style.display = 'block';
         try {
-            // Memanggil endpoint khusus Nuance (/api/compare)
-            const res = await fetch("/api/compare", { 
-                method: "POST", 
-                headers: { "Content-Type": "application/json" }, 
-                body: JSON.stringify({ message: promptText }) 
-            });
+            const res = await fetch("/api/compare", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: `Bandingkan nuansa: "${wordA}" vs "${wordB}"` }) });
             const data = await res.json();
-            
-            load.style.display = 'none';
-            resultBox.style.display = 'block';
-            // Render hasil markdown ke dalam kotak hasil yang elegan
+            load.style.display = 'none'; resultBox.style.display = 'block';
             resultBox.innerHTML = marked.parse(data.reply);
-            
-        } catch (e) { 
-            load.style.display = 'none'; 
-            resultBox.style.display = 'block';
-            resultBox.innerHTML = "<p style='color:red;'>Terjadi kesalahan jaringan. Coba lagi.</p>";
-        }
+        } catch (e) { load.style.display = 'none'; resultBox.style.display = 'block'; resultBox.innerHTML = "<p style='color:red;'>Terjadi kesalahan jaringan.</p>"; }
     }
 </script>
 </body>
