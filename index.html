@@ -5,16 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>HikariTutor - Telegram Style</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    
     <script src="https://elfsightcdn.com/platform.js" async></script>
 
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            /* Menggunakan font bawaan sistem seperti Apple/Android */
+            /* Font standar sistem bawaan HP (seperti Telegram asli) */
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #e4e5e0; /* Warna abu-abu background Telegram */
+            background-color: #e4e5e0; /* Warna abu luar */
             margin: 0; 
             display: flex; 
             justify-content: center;
@@ -28,7 +27,8 @@
             max-width: 500px; 
             display: flex; 
             flex-direction: column;
-            background: #9fbcd3; /* Warna biru-abu khas background chat Telegram */
+            background-color: #8faebe; /* Warna biru-abu khas Telegram Chat */
+            /* Opsional: Efek pattern Telegram halus jika mau pakai gambar, tapi warna solid ini sudah sangat mirip */
             position: relative;
         }
 
@@ -38,20 +38,20 @@
             padding: 8px 15px;
             display: flex;
             align-items: center;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
             z-index: 10;
         }
 
         .avatar {
-            width: 42px; 
-            height: 42px; 
-            background: #3390ec; /* Warna biru Telegram */
+            width: 40px; 
+            height: 40px; 
+            background: #3390ec; 
             border-radius: 50%; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             color: white;
-            font-size: 1.2rem; 
+            font-size: 1.1rem; 
             margin-right: 12px;
         }
 
@@ -66,46 +66,76 @@
             overflow-y: auto; 
             display: flex; 
             flex-direction: column; 
-            gap: 6px; /* Jarak antar pesan sangat rapat */
+            gap: 8px; 
         }
 
         .bubble {
-            max-width: 82%; 
-            padding: 6px 10px 8px 12px; 
+            max-width: 85%; 
+            padding: 8px 12px; 
             font-size: 15px; 
-            line-height: 1.4; 
+            line-height: 1.45; 
             position: relative; 
-            box-shadow: 0 1px 1px rgba(0,0,0,0.1); 
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1); 
             word-wrap: break-word;
+            display: flex;
+            flex-direction: column; /* Memastikan jam selalu di bawah konten */
         }
-
-        /* Styling spesifik untuk Markdown di dalam bubble agar tidak berantakan */
-        .bubble p { margin: 0 0 5px 0; }
-        .bubble p:last-child { margin: 0; }
-        .bubble strong { font-weight: 600; }
 
         .sensei {
             align-self: flex-start; 
             background: #ffffff; 
-            color: #000; 
-            border-radius: 12px 12px 12px 4px; /* Sudut lancip di kiri bawah */
+            border-radius: 12px 12px 12px 4px; 
         }
 
         .user {
             align-self: flex-end; 
-            background: #effdde; /* Warna hijau muda khas pesan terkirim Telegram/WA */
-            color: #000; 
-            border-radius: 12px 12px 4px 12px; /* Sudut lancip di kanan bawah */
+            background: #effdde; 
+            border-radius: 12px 12px 4px 12px; 
         }
 
         .time {
             font-size: 11px; 
             color: #a1aab3; 
-            float: right; 
-            margin: 6px -2px -4px 12px; /* Posisi jam di pojok kanan bawah */
+            align-self: flex-end; /* Memaksa jam ke kanan bawah */
+            margin-top: 4px;
+            margin-bottom: -2px;
+            margin-right: -4px;
         }
+        .user .time { color: #68bc70; }
 
-        .user .time { color: #68bc70; } /* Warna jam agak hijau untuk pesan user */
+        /* --- PERBAIKAN MARKDOWN & TABEL (Sangat Penting) --- */
+        .bubble p { margin: 0 0 6px 0; }
+        .bubble p:last-of-type { margin-bottom: 0; }
+        .bubble strong { font-weight: 600; }
+        
+        /* List Bullets (Titik-titik) */
+        .bubble ul, .bubble ol {
+            margin: 6px 0;
+            padding-left: 20px;
+        }
+        .bubble li { margin-bottom: 4px; }
+
+        /* Tabel Responsif */
+        .bubble table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 8px 0;
+            display: block; /* Membuat tabel bisa di-scroll */
+            overflow-x: auto; /* Scroll horizontal jika tabel kelebaran */
+            white-space: nowrap; /* Mencegah teks turun ke bawah dan gencet */
+            background-color: rgba(0,0,0,0.02);
+            border-radius: 6px;
+        }
+        .bubble th, .bubble td {
+            border: 1px solid #e0e0e0;
+            padding: 6px 10px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .bubble th {
+            background-color: rgba(0,0,0,0.05);
+            font-weight: 600;
+        }
 
         /* --- INPUT AREA --- */
         .input-bar {
@@ -117,16 +147,6 @@
             padding-bottom: calc(8px + env(safe-area-inset-bottom));
         }
 
-        input {
-            flex: 1; 
-            background: #ffffff; 
-            border: none; 
-            padding: 10px 0; 
-            font-size: 15px; 
-            outline: none; 
-            font-family: inherit;
-        }
-
         .input-wrapper {
             flex: 1;
             background: #f4f4f5;
@@ -136,34 +156,42 @@
             align-items: center;
         }
 
+        input {
+            flex: 1; 
+            background: transparent; 
+            border: none; 
+            padding: 10px 0; 
+            font-size: 15px; 
+            outline: none; 
+            font-family: inherit;
+        }
+
         button#sendBtn {
             background: #3390ec; 
             color: white; 
             border: none; 
-            width: 36px; 
-            height: 36px; 
+            width: 40px; 
+            height: 40px; 
             border-radius: 50%; 
             cursor: pointer; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            font-size: 1rem;
             flex-shrink: 0;
-            margin-bottom: 2px;
             transition: transform 0.1s;
         }
 
         button#sendBtn:active { transform: scale(0.95); }
 
-        /* Loader simpel mirip "typing..." */
         #loading {
             align-self: flex-start; 
             background: transparent; 
-            padding: 5px 12px; 
+            padding: 2px 15px; 
             display: none; 
             font-size: 13px; 
             color: #3390ec;
             font-weight: 500;
+            margin-bottom: 5px;
         }
 
         /* HIDDEN MUSIC */
@@ -203,7 +231,6 @@
 </div>
 
 <script>
-    // Set waktu untuk pesan pertama
     document.getElementById('initTime').innerText = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 
     function getTime() {
@@ -218,7 +245,6 @@
         
         if(!text) return;
 
-        // Render Pesan User
         chat.innerHTML += `
             <div class="bubble user">
                 <p>${text}</p>
@@ -227,7 +253,7 @@
         `;
         
         input.value = ''; 
-        chat.appendChild(load); // Pindahkan loader ke paling bawah
+        chat.appendChild(load); 
         load.style.display = 'block'; 
         chat.scrollTop = chat.scrollHeight;
 
@@ -241,7 +267,6 @@
             
             load.style.display = 'none';
             
-            // Render Pesan Sensei
             chat.innerHTML += `
                 <div class="bubble sensei">
                     ${marked.parse(data.reply)}
@@ -252,7 +277,7 @@
             load.style.display = 'none'; 
             chat.innerHTML += `
                 <div class="bubble sensei">
-                    <p>Pesan tidak terkirim. Coba lagi.</p>
+                    <p>Pesan tidak terkirim. Koneksi terputus.</p>
                     <span class="time">${getTime()}</span>
                 </div>
             `; 
