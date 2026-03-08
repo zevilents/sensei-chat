@@ -13,28 +13,10 @@ app.use(express.static(__dirname));
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-app.post('/api/chat', async (req, res) => {
-    try {
-        if (!OPENROUTER_API_KEY) return res.status(500).json({ reply: "API Key belum diatur." });
-
-        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${OPENROUTER_API_KEY.trim()}`,
-                "Content-Type": "application/json",
-                "HTTP-Referer": "stepfun/step-3.5-flash:free", 
-                "X-Title": "HikariTutor"
-            },
-            body: JSON.stringify({
-                "model": "nvidia/nemotron-3-nano-30b-a3b:free",
-                "messages": [
-                    { 
-                        "role": "system", 
-                        content: `Kamu adalah Hikari Sensei, guru bahasa Jepang yang ramah, ringkas, dan sangat terstruktur. Gunakan bahasa Indonesia.
+// ==========================================
+// 🔒 LOGIC UTAMA (SUDAH DIPATENKAN - TIDAK DIUBAH)
+// ==========================================
+const PATEN_PROMPT = `Kamu adalah Hikari Sensei, guru bahasa Jepang yang ramah, ringkas, dan sangat terstruktur. Gunakan bahasa Indonesia.
 
 ATURAN KETAT (WAJIB DIIKUTI):
 1. DILARANG KERAS menggunakan Tabel Markdown. Gunakan teks biasa, angka, atau bullet point (-).
@@ -70,8 +52,65 @@ Berikan 3 contoh kalimat yang menggunakan kata/kanji tersebut:
 - Indonesian: [Arti 3]
 
 **5. Pola Tata Bahasa:**
-- [Jelaskan pola tata bahasa atau partikel utama yang digunakan. Sertakan huruf Jepang, Romaji, dan terjemahannya]`
-                    },
+- [Jelaskan pola tata bahasa atau partikel utama yang digunakan. Sertakan huruf Jepang, Romaji, dan terjemahannya]`;
+
+// ==========================================
+// ⚖️ LOGIC NUANCE COMPARATOR (FITUR BARU)
+// ==========================================
+const NUANCE_PROMPT = `Kamu adalah Hikari Sensei, ahli linguistik Jepang. Tugasmu HANYA membandingkan nuansa 2 kata atau lebih yang ditanyakan user.
+
+ATURAN KETAT:
+1. DILARANG menggunakan Tabel Markdown.
+2. Furigana dalam kurung setelah Kanji. Contoh: 見(み)る.
+3. Jawab langsung ke intinya dengan struktur di bawah ini.
+
+STRUKTUR JAWABAN:
+**⚖️ Pembanding Nuansa**
+
+**1. Makna Dasar:**
+- [Jelaskan secara ringkas inti perbedaan kedua kata tersebut]
+
+**2. [Kata Pertama]:**
+- Nuansa: [Kapan kata ini tepat digunakan]
+- Contoh: [Kalimat Jepang] - [Romaji] - [Arti]
+
+**3. [Kata Kedua]:**
+- Nuansa: [Kapan kata ini tepat digunakan]
+- Contoh: [Kalimat Jepang] - [Romaji] - [Arti]
+
+**4. Kesimpulan Ringkas:**
+- [Beri tips 1 kalimat cara cepat mengingat perbedaannya]`;
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Endpoint untuk CHAT UTAMA
+app.post('/api/chat', async (req, res) => {
+    await handleOpenRouter(req, res, PATEN_PROMPT);
+});
+
+// Endpoint untuk NUANCE COMPARATOR
+app.post('/api/compare', async (req, res) => {
+    await handleOpenRouter(req, res, NUANCE_PROMPT);
+});
+
+async function handleOpenRouter(req, res, systemPrompt) {
+    try {
+        if (!OPENROUTER_API_KEY) return res.status(500).json({ reply: "API Key belum diatur." });
+
+        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${OPENROUTER_API_KEY.trim()}`,
+                "Content-Type": "application/json",
+                "HTTP-Referer": "https://sensei-chat.onrender.com", 
+                "X-Title": "HikariTutor"
+            },
+            body: JSON.stringify({
+                "model": "nvidia/nemotron-3-nano-30b-a3b:free",
+                "messages": [
+                    { "role": "system", "content": systemPrompt },
                     { "role": "user", "content": req.body.message }
                 ]
             })
@@ -83,13 +122,7 @@ Berikan 3 contoh kalimat yang menggunakan kata/kanji tersebut:
     } catch (error) {
         res.status(500).json({ reply: "Koneksi terputus! 🌸" });
     }
-});
+}
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 HikariTutor Live on port ${PORT}`));
-
-
-
-
-
-
