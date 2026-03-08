@@ -30,7 +30,7 @@ app.post('/api/chat', async (req, res) => {
                 "X-Title": "HikariTutor"
             },
             body: JSON.stringify({
-                "model": "google/gemini-2.0-flash-lite-preview-02-05:free",
+                "model": "stepfun/step-3.5-flash:free",
                 "messages": [
                     { 
                         "role": "system", 
@@ -51,3 +51,4 @@ app.post('/api/chat', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 HikariTutor Live on port ${PORT}`));
+
