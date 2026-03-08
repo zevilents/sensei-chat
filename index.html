@@ -3,64 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>HikariTutor - Focus Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Noto+Sans+JP:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <title>HikariTutor - Telegram Style</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
     <script src="https://elfsightcdn.com/platform.js" async></script>
 
     <style>
-        :root {
-            --sky: #7ed6df; --deep: #22a6b3; --sun: #f9ca24;
-            --cloud: rgba(255, 255, 255, 0.98); --dark: #130f40;
-        }
-
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            font-family: 'Poppins', 'Noto Sans JP', sans-serif;
-            background: linear-gradient(135deg, #7ed6df 0%, #e0fcff 100%);
-            margin: 0; display: flex; justify-content: center;
-            height: 100dvh; overflow: hidden;
+            /* Menggunakan font bawaan sistem seperti Apple/Android */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #e4e5e0; /* Warna abu-abu background Telegram */
+            margin: 0; 
+            display: flex; 
+            justify-content: center;
+            height: 100dvh; 
+            overflow: hidden;
+            color: #000;
         }
-
-        .sakura-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-        .petal { position: absolute; background: #ffdae0; border-radius: 150% 0 150% 0; animation: fall linear infinite; }
-        @keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
 
         .app {
-            width: 100%; max-width: 500px; display: flex; flex-direction: column;
-            z-index: 2; background: var(--cloud); backdrop-filter: blur(10px);
-            box-shadow: 0 0 30px rgba(0,0,0,0.1); height: 100%; position: relative;
+            width: 100%; 
+            max-width: 500px; 
+            display: flex; 
+            flex-direction: column;
+            background: #9fbcd3; /* Warna biru-abu khas background chat Telegram */
+            position: relative;
         }
 
+        /* --- HEADER --- */
         header {
-            padding: 15px 20px; background: white; display: flex; align-items: center; 
-            border-bottom: 4px solid var(--sun); flex-shrink: 0;
+            background: #ffffff;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+            z-index: 10;
         }
 
-        .header-left { display: flex; align-items: center; gap: 12px; }
-        .avatar { width: 40px; height: 40px; background: var(--sky); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 2px solid white; box-shadow: 0 3px 8px rgba(0,0,0,0.1); }
+        .avatar {
+            width: 42px; 
+            height: 42px; 
+            background: #3390ec; /* Warna biru Telegram */
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: white;
+            font-size: 1.2rem; 
+            margin-right: 12px;
+        }
 
-        #chat-window { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        .info { display: flex; flex-direction: column; }
+        .info h1 { margin: 0; font-size: 16px; font-weight: 600; color: #000; }
+        .info p { margin: 0; font-size: 13px; color: #3390ec; margin-top: 2px; }
+
+        /* --- CHAT AREA --- */
+        #chat-window {
+            flex: 1; 
+            padding: 15px; 
+            overflow-y: auto; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 6px; /* Jarak antar pesan sangat rapat */
+        }
 
         .bubble {
-            max-width: 85%; padding: 12px 18px; border-radius: 20px; font-size: 0.95rem;
-            line-height: 1.5; animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
-            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+            max-width: 82%; 
+            padding: 6px 10px 8px 12px; 
+            font-size: 15px; 
+            line-height: 1.4; 
+            position: relative; 
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1); 
+            word-wrap: break-word;
         }
-        @keyframes pop { from { opacity: 0; transform: scale(0.9) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
-        .sensei { align-self: flex-start; background: white; border-bottom-left-radius: 2px; border: 1px solid #eee; }
-        .user { align-self: flex-end; background: var(--sky); color: white; border-bottom-right-radius: 2px; font-weight: 500; }
+        /* Styling spesifik untuk Markdown di dalam bubble agar tidak berantakan */
+        .bubble p { margin: 0 0 5px 0; }
+        .bubble p:last-child { margin: 0; }
+        .bubble strong { font-weight: 600; }
 
-        .input-bar { padding: 15px; background: white; border-top: 1px solid #eee; padding-bottom: calc(15px + env(safe-area-inset-bottom)); }
-        .input-group { background: #f1f2f6; border-radius: 30px; display: flex; align-items: center; border: 2px solid var(--sky); padding: 5px; }
-        input { flex: 1; border: none; padding: 10px 15px; outline: none; font-size: 1rem; background: transparent; font-family: inherit; }
-        button#sendBtn { background: var(--sun); color: white; border: none; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .sensei {
+            align-self: flex-start; 
+            background: #ffffff; 
+            color: #000; 
+            border-radius: 12px 12px 12px 4px; /* Sudut lancip di kiri bawah */
+        }
 
-        #loading { align-self: flex-start; background: white; padding: 8px 15px; border-radius: 15px; display: none; align-items: center; gap: 10px; border: 2px solid var(--sun); margin-bottom: 5px; }
-        .shuriken { width: 20px; height: 20px; background: var(--sun); clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); animation: spin 0.8s linear infinite; }
+        .user {
+            align-self: flex-end; 
+            background: #effdde; /* Warna hijau muda khas pesan terkirim Telegram/WA */
+            color: #000; 
+            border-radius: 12px 12px 4px 12px; /* Sudut lancip di kanan bawah */
+        }
+
+        .time {
+            font-size: 11px; 
+            color: #a1aab3; 
+            float: right; 
+            margin: 6px -2px -4px 12px; /* Posisi jam di pojok kanan bawah */
+        }
+
+        .user .time { color: #68bc70; } /* Warna jam agak hijau untuk pesan user */
+
+        /* --- INPUT AREA --- */
+        .input-bar {
+            background: #ffffff; 
+            padding: 8px 12px; 
+            display: flex; 
+            align-items: flex-end; 
+            gap: 10px; 
+            padding-bottom: calc(8px + env(safe-area-inset-bottom));
+        }
+
+        input {
+            flex: 1; 
+            background: #ffffff; 
+            border: none; 
+            padding: 10px 0; 
+            font-size: 15px; 
+            outline: none; 
+            font-family: inherit;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            background: #f4f4f5;
+            border-radius: 20px;
+            padding: 0 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        button#sendBtn {
+            background: #3390ec; 
+            color: white; 
+            border: none; 
+            width: 36px; 
+            height: 36px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1rem;
+            flex-shrink: 0;
+            margin-bottom: 2px;
+            transition: transform 0.1s;
+        }
+
+        button#sendBtn:active { transform: scale(0.95); }
+
+        /* Loader simpel mirip "typing..." */
+        #loading {
+            align-self: flex-start; 
+            background: transparent; 
+            padding: 5px 12px; 
+            display: none; 
+            font-size: 13px; 
+            color: #3390ec;
+            font-weight: 500;
+        }
 
         /* HIDDEN MUSIC */
         .elfsight-app-c7fb5b15-6956-4f7e-93e7-7f6bd801fb5e { display: none !important; }
@@ -68,41 +172,64 @@
 </head>
 <body>
 
-<div class="sakura-bg" id="sakura"></div>
 <div class="elfsight-app-c7fb5b15-6956-4f7e-93e7-7f6bd801fb5e" data-elfsight-app-lazy></div>
 
 <div class="app">
     <header>
-        <div class="header-left">
-            <div class="avatar">🏯</div>
-            <div>
-                <h1 style="font-family:'Fredoka One'; font-size:1.1rem; margin:0; color:var(--deep);">HIKARI TUTOR</h1>
-                <p style="color:#27ae60; font-size:0.7rem; margin:0; font-weight:bold;">● Online</p>
-            </div>
+        <div class="avatar">🏯</div>
+        <div class="info">
+            <h1>Hikari Sensei</h1>
+            <p>online</p>
         </div>
     </header>
 
     <div id="chat-window">
-        <div class="bubble sensei">Ohayou! ☀️ Saya **Hikari Sensei**. Mari kita ngobrol dan belajar bahasa Jepang bersama. Apa yang ingin kamu tanyakan?</div>
+        <div class="bubble sensei">
+            <p>Ohayou! Saya Hikari Sensei. Mari kita belajar bahasa Jepang bersama.</p>
+            <span class="time" id="initTime"></span>
+        </div>
     </div>
 
-    <div id="loading"><div class="shuriken"></div><span style="font-size:0.8rem; font-weight:bold; color:var(--deep);">Thinking...</span></div>
+    <div id="loading">typing...</div>
 
     <div class="input-bar">
-        <div class="input-group">
-            <input type="text" id="userInput" placeholder="Ketik pesan..." autocomplete="off" onkeypress="if(event.key==='Enter') sendMessage()">
-            <button id="sendBtn" onclick="sendMessage()">⚡</button>
+        <div class="input-wrapper">
+            <input type="text" id="userInput" placeholder="Message" autocomplete="off" onkeypress="if(event.key==='Enter') sendMessage()">
         </div>
+        <button id="sendBtn" onclick="sendMessage()">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+        </button>
     </div>
 </div>
 
 <script>
-    async function sendMessage() {
-        const input = document.getElementById('userInput'), chat = document.getElementById('chat-window'), load = document.getElementById('loading');
-        const text = input.value.trim(); if(!text) return;
+    // Set waktu untuk pesan pertama
+    document.getElementById('initTime').innerText = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 
-        chat.innerHTML += `<div class="bubble user">${text}</div>`;
-        input.value = ''; chat.appendChild(load); load.style.display = 'flex'; chat.scrollTop = chat.scrollHeight;
+    function getTime() {
+        return new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    async function sendMessage() {
+        const input = document.getElementById('userInput');
+        const chat = document.getElementById('chat-window');
+        const load = document.getElementById('loading');
+        const text = input.value.trim(); 
+        
+        if(!text) return;
+
+        // Render Pesan User
+        chat.innerHTML += `
+            <div class="bubble user">
+                <p>${text}</p>
+                <span class="time">${getTime()}</span>
+            </div>
+        `;
+        
+        input.value = ''; 
+        chat.appendChild(load); // Pindahkan loader ke paling bawah
+        load.style.display = 'block'; 
+        chat.scrollTop = chat.scrollHeight;
 
         try {
             const res = await fetch("/api/chat", { 
@@ -111,22 +238,26 @@
                 body: JSON.stringify({ message: text }) 
             });
             const data = await res.json();
+            
             load.style.display = 'none';
-            chat.innerHTML += `<div class="bubble sensei">${marked.parse(data.reply)}</div>`;
+            
+            // Render Pesan Sensei
+            chat.innerHTML += `
+                <div class="bubble sensei">
+                    ${marked.parse(data.reply)}
+                    <span class="time">${getTime()}</span>
+                </div>
+            `;
         } catch (e) { 
             load.style.display = 'none'; 
-            chat.innerHTML += `<div class="bubble sensei">Gomen, koneksi terputus! 🌸</div>`; 
+            chat.innerHTML += `
+                <div class="bubble sensei">
+                    <p>Pesan tidak terkirim. Coba lagi.</p>
+                    <span class="time">${getTime()}</span>
+                </div>
+            `; 
         }
         chat.scrollTop = chat.scrollHeight;
-    }
-
-    // Sakura Animation
-    const s = document.getElementById('sakura');
-    for (let i = 0; i < 15; i++) {
-        const p = document.createElement('div'); p.className = 'petal';
-        p.style.left = Math.random() * 100 + 'vw'; p.style.width = p.style.height = Math.random() * 8 + 6 + 'px';
-        p.style.animationDuration = Math.random() * 3 + 4 + 's'; p.style.animationDelay = Math.random() * 5 + 's';
-        s.appendChild(p);
     }
 </script>
 </body>
