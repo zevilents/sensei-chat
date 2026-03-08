@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>HikariTutor - Telegram Style</title>
+    <title>HikariTutor App</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://elfsightcdn.com/platform.js" async></script>
 
@@ -12,70 +12,142 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #e4e5e0; 
+            background-color: #f0f2f5; /* Warna background aplikasi modern */
             margin: 0; display: flex; justify-content: center;
-            height: 100dvh; overflow: hidden; color: #000;
+            height: 100dvh; overflow: hidden; color: #1c1e21;
         }
 
-        .app {
+        .app-container {
             width: 100%; max-width: 500px; display: flex; flex-direction: column;
-            background-color: #8faebe; position: relative;
+            background-color: #ffffff; position: relative; height: 100%;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
         }
 
-        /* --- HEADER --- */
+        /* --- SCREEN SYSTEM --- */
+        .screen {
+            display: none; /* Sembunyikan semua layar secara default */
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+        }
+        .screen.active { display: flex; } /* Tampilkan hanya yang aktif */
+
+        /* --- GLOBAL HEADER --- */
         header {
-            background: #ffffff; padding: 8px 15px; display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1); z-index: 10;
+            background: #ffffff; padding: 12px 15px; display: flex; align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08); z-index: 10;
         }
-
-        .header-left { display: flex; align-items: center; }
-        .avatar {
-            width: 40px; height: 40px; background: #3390ec; border-radius: 50%; display: flex; 
-            align-items: center; justify-content: center; color: white; font-size: 1.1rem; margin-right: 12px; transition: 0.3s;
+        .back-btn {
+            background: transparent; border: none; font-size: 1.2rem; color: #3390ec;
+            margin-right: 10px; cursor: pointer; padding: 5px; display: flex; align-items: center;
         }
-        .avatar.compare-mode { background: #e67e22; } /* Ganti warna saat mode nuansa */
+        .header-title { font-size: 17px; font-weight: 600; color: #000; margin: 0; }
+        .header-subtitle { font-size: 12px; color: #65676b; margin: 0; }
 
-        .info { display: flex; flex-direction: column; }
-        .info h1 { margin: 0; font-size: 16px; font-weight: 600; color: #000; }
-        .info p { margin: 0; font-size: 13px; color: #3390ec; margin-top: 2px; }
-
-        /* Mode Toggle Button */
-        #modeToggleBtn {
-            background: transparent; border: none; color: #3390ec; font-size: 14px; font-weight: 600;
-            cursor: pointer; padding: 5px 10px; border-radius: 15px; background: #f0f4f8; transition: 0.2s;
+        /* =========================================
+           SCREEN 1: DASHBOARD (HOME)
+           ========================================= */
+        #home-screen { background-color: #f0f2f5; }
+        .dashboard-header {
+            background: #3390ec; color: white; padding: 30px 20px;
+            border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
+            box-shadow: 0 4px 10px rgba(51, 144, 236, 0.2);
         }
-        #modeToggleBtn.active { background: #ffeaa7; color: #d35400; }
+        .dashboard-header h1 { margin: 0; font-size: 24px; font-weight: 700; }
+        .dashboard-header p { margin: 5px 0 0 0; font-size: 14px; opacity: 0.9; }
 
-        /* --- CHAT AREA --- */
+        .menu-container { padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        
+        .menu-card {
+            background: white; border-radius: 15px; padding: 20px;
+            display: flex; align-items: center; gap: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06); cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s; border: 1px solid #eee;
+        }
+        .menu-card:active { transform: scale(0.98); background: #f8f9fa; }
+        .menu-icon {
+            width: 50px; height: 50px; border-radius: 12px; display: flex;
+            align-items: center; justify-content: center; font-size: 24px;
+        }
+        .icon-chat { background: #e3f2fd; color: #3390ec; }
+        .icon-compare { background: #fff3e0; color: #e67e22; }
+        
+        .menu-text h3 { margin: 0; font-size: 16px; color: #1c1e21; }
+        .menu-text p { margin: 4px 0 0 0; font-size: 13px; color: #65676b; }
+
+
+        /* =========================================
+           SCREEN 2: CHAT (TELEGRAM STYLE)
+           ========================================= */
+        #chat-screen { background-color: #8faebe; }
         #chat-window { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-
+        
         .bubble {
-            max-width: 85%; padding: 8px 12px; font-size: 15px; line-height: 1.45; position: relative; 
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1); word-wrap: break-word; display: flex; flex-direction: column;
+            max-width: 85%; padding: 8px 12px; font-size: 15px; line-height: 1.45;
+            position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            word-wrap: break-word; display: flex; flex-direction: column;
         }
         .sensei { align-self: flex-start; background: #ffffff; border-radius: 12px 12px 12px 4px; }
         .user { align-self: flex-end; background: #effdde; border-radius: 12px 12px 4px 12px; }
-
         .time { font-size: 11px; color: #a1aab3; align-self: flex-end; margin-top: 4px; margin-bottom: -2px; margin-right: -4px; }
         .user .time { color: #68bc70; }
 
-        /* MARKDOWN FIXES */
-        .bubble p { margin: 0 0 6px 0; }
-        .bubble p:last-of-type { margin-bottom: 0; }
+        /* Markdown chat fixes */
+        .bubble p { margin: 0 0 6px 0; } .bubble p:last-of-type { margin-bottom: 0; }
         .bubble strong { font-weight: 600; }
-        .bubble ul, .bubble ol { margin: 6px 0; padding-left: 20px; }
-        .bubble li { margin-bottom: 4px; }
+        .bubble ul, .bubble ol { margin: 6px 0; padding-left: 20px; } .bubble li { margin-bottom: 4px; }
 
-        /* --- INPUT AREA --- */
-        .input-bar { background: #ffffff; padding: 8px 12px; display: flex; align-items: flex-end; gap: 10px; padding-bottom: calc(8px + env(safe-area-inset-bottom)); }
+        .input-bar {
+            background: #ffffff; padding: 8px 12px; display: flex; align-items: flex-end; gap: 10px;
+            padding-bottom: calc(8px + env(safe-area-inset-bottom));
+        }
         .input-wrapper { flex: 1; background: #f4f4f5; border-radius: 20px; padding: 0 15px; display: flex; align-items: center; }
-        input { flex: 1; background: transparent; border: none; padding: 10px 0; font-size: 15px; outline: none; font-family: inherit; }
-        button#sendBtn { background: #3390ec; color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.1s; }
-        button#sendBtn:active { transform: scale(0.95); }
-        button#sendBtn.compare-mode { background: #e67e22; }
+        .input-wrapper input { flex: 1; background: transparent; border: none; padding: 10px 0; font-size: 15px; outline: none; }
+        .send-btn {
+            background: #3390ec; color: white; border: none; width: 40px; height: 40px; border-radius: 50%;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
 
-        #loading { align-self: flex-start; background: transparent; padding: 2px 15px; display: none; font-size: 13px; color: #3390ec; font-weight: 500; margin-bottom: 5px; }
+        #chat-loading { align-self: flex-start; background: transparent; padding: 2px 15px; display: none; font-size: 13px; color: #3390ec; font-weight: 500; margin-bottom: 5px; }
 
+
+        /* =========================================
+           SCREEN 3: NUANCE COMPARATOR
+           ========================================= */
+        #compare-screen { background-color: #f8f9fa; }
+        .compare-container { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+        
+        .compare-box { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        .compare-box h2 { margin: 0 0 15px 0; font-size: 16px; color: #1c1e21; text-align: center; }
+        
+        .input-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 15px; }
+        .input-row input {
+            flex: 1; padding: 12px; border: 2px solid #e4e6eb; border-radius: 10px;
+            font-size: 16px; text-align: center; outline: none; transition: 0.2s;
+        }
+        .input-row input:focus { border-color: #e67e22; }
+        .vs-badge { background: #e67e22; color: white; font-weight: bold; font-size: 12px; padding: 5px 10px; border-radius: 20px; }
+
+        .compare-btn {
+            width: 100%; background: #e67e22; color: white; border: none; padding: 14px;
+            border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s;
+        }
+        .compare-btn:active { background: #d35400; }
+
+        #compare-loading { display: none; text-align: center; color: #e67e22; font-size: 14px; font-weight: 500; padding: 20px; }
+
+        .result-box {
+            background: white; padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid #eee; display: none; font-size: 15px; line-height: 1.6;
+        }
+        /* Result Markdown Styling */
+        .result-box h3 { margin: 0 0 10px 0; color: #e67e22; font-size: 18px; }
+        .result-box p { margin: 0 0 10px 0; }
+        .result-box ul { margin: 0 0 15px 0; padding-left: 20px; }
+        .result-box li { margin-bottom: 5px; }
+        .result-box strong { color: #1c1e21; }
+
+        /* HIDDEN MUSIC */
         .elfsight-app-c7fb5b15-6956-4f7e-93e7-7f6bd801fb5e { display: none !important; }
     </style>
 </head>
@@ -83,75 +155,120 @@
 
 <div class="elfsight-app-c7fb5b15-6956-4f7e-93e7-7f6bd801fb5e" data-elfsight-app-lazy></div>
 
-<div class="app">
-    <header>
-        <div class="header-left">
-            <div class="avatar" id="avatarIcon">🏯</div>
-            <div class="info">
-                <h1 id="headerTitle">Hikari Sensei</h1>
-                <p>online</p>
+<div class="app-container">
+
+    <div id="home-screen" class="screen active">
+        <div class="dashboard-header">
+            <h1>HikariTutor</h1>
+            <p>Pilih mode belajarmu hari ini</p>
+        </div>
+        
+        <div class="menu-container">
+            <div class="menu-card" onclick="navTo('chat-screen')">
+                <div class="menu-icon icon-chat">💬</div>
+                <div class="menu-text">
+                    <h3>Hikari Sensei Chat</h3>
+                    <p>Bedah kosakata dan kalimat bahasa Jepang</p>
+                </div>
+            </div>
+
+            <div class="menu-card" onclick="navTo('compare-screen')">
+                <div class="menu-icon icon-compare">⚖️</div>
+                <div class="menu-text">
+                    <h3>Nuance Comparator</h3>
+                    <p>Bandingkan dua kata yang maknanya mirip</p>
+                </div>
             </div>
         </div>
-        <button id="modeToggleBtn" onclick="toggleMode()">⚖️ Nuansa</button>
-    </header>
+    </div>
 
-    <div id="chat-window">
-        <div class="bubble sensei">
-            <p>Ohayou! Saya Hikari Sensei. Ketik kata atau kalimat untuk dibedah. Jika ingin membandingkan dua kata, klik tombol **⚖️ Nuansa** di atas.</p>
-            <span class="time" id="initTime"></span>
+
+    <div id="chat-screen" class="screen">
+        <header>
+            <button class="back-btn" onclick="navTo('home-screen')">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/></svg>
+            </button>
+            <div style="display:flex; align-items:center;">
+                <div style="width:36px; height:36px; background:#3390ec; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; margin-right:10px;">🏯</div>
+                <div>
+                    <p class="header-title">Hikari Sensei</p>
+                    <p class="header-subtitle">online</p>
+                </div>
+            </div>
+        </header>
+
+        <div id="chat-window">
+            <div class="bubble sensei">
+                <p>Ohayou! Ketik kata atau kalimat Jepang yang ingin dibedah.</p>
+                <span class="time" id="initTime"></span>
+            </div>
+        </div>
+
+        <div id="chat-loading">typing...</div>
+
+        <div class="input-bar">
+            <div class="input-wrapper">
+                <input type="text" id="chatInput" placeholder="Message" autocomplete="off" onkeypress="if(event.key==='Enter') sendChat()">
+            </div>
+            <button class="send-btn" onclick="sendChat()">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+            </button>
         </div>
     </div>
 
-    <div id="loading">typing...</div>
 
-    <div class="input-bar">
-        <div class="input-wrapper">
-            <input type="text" id="userInput" placeholder="Ketik kata/kalimat..." autocomplete="off" onkeypress="if(event.key==='Enter') sendMessage()">
+    <div id="compare-screen" class="screen">
+        <header>
+            <button class="back-btn" onclick="navTo('home-screen')">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" style="color:#e67e22;"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/></svg>
+            </button>
+            <div>
+                <p class="header-title">Nuance Comparator</p>
+                <p class="header-subtitle">Analisis kemiripan makna</p>
+            </div>
+        </header>
+
+        <div class="compare-container">
+            <div class="compare-box">
+                <h2>Masukkan Kata:</h2>
+                <div class="input-row">
+                    <input type="text" id="wordA" placeholder="Contoh: 見る">
+                    <div class="vs-badge">VS</div>
+                    <input type="text" id="wordB" placeholder="Contoh: 見学">
+                </div>
+                <button class="compare-btn" onclick="sendCompare()">Bandingkan Nuansa</button>
+            </div>
+
+            <div id="compare-loading">Mengalisis Nuansa... ⚖️</div>
+            
+            <div class="result-box" id="compareResult">
+                </div>
         </div>
-        <button id="sendBtn" onclick="sendMessage()">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
-        </button>
     </div>
+
 </div>
 
 <script>
+    // Set inisial waktu chat
     document.getElementById('initTime').innerText = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-
-    let isCompareMode = false;
-
-    function toggleMode() {
-        isCompareMode = !isCompareMode;
-        const btn = document.getElementById('modeToggleBtn');
-        const title = document.getElementById('headerTitle');
-        const input = document.getElementById('userInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const avatar = document.getElementById('avatarIcon');
-
-        if (isCompareMode) {
-            btn.classList.add('active');
-            title.innerText = "Comparator Mode";
-            input.placeholder = "Bandingkan kata (Cth: Miru vs Kengaku)";
-            sendBtn.classList.add('compare-mode');
-            avatar.classList.add('compare-mode');
-            avatar.innerText = "⚖️";
-        } else {
-            btn.classList.remove('active');
-            title.innerText = "Hikari Sensei";
-            input.placeholder = "Ketik kata/kalimat...";
-            sendBtn.classList.remove('compare-mode');
-            avatar.classList.remove('compare-mode');
-            avatar.innerText = "🏯";
-        }
-    }
 
     function getTime() {
         return new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
     }
 
-    async function sendMessage() {
-        const input = document.getElementById('userInput');
+    // --- NAVIGATION LOGIC ---
+    function navTo(screenId) {
+        // Sembunyikan semua screen
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        // Tampilkan screen yang diminta
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    // --- CHAT LOGIC (Hikari Sensei) ---
+    async function sendChat() {
+        const input = document.getElementById('chatInput');
         const chat = document.getElementById('chat-window');
-        const load = document.getElementById('loading');
+        const load = document.getElementById('chat-loading');
         const text = input.value.trim(); 
         
         if(!text) return;
@@ -168,11 +285,9 @@
         load.style.display = 'block'; 
         chat.scrollTop = chat.scrollHeight;
 
-        // Tentukan API mana yang dipanggil berdasarkan mode aktif
-        const apiUrl = isCompareMode ? "/api/compare" : "/api/chat";
-
         try {
-            const res = await fetch(apiUrl, { 
+            // Memanggil endpoint chat biasa (PATEN PROMPT)
+            const res = await fetch("/api/chat", { 
                 method: "POST", 
                 headers: { "Content-Type": "application/json" }, 
                 body: JSON.stringify({ message: text }) 
@@ -180,7 +295,6 @@
             const data = await res.json();
             
             load.style.display = 'none';
-            
             chat.innerHTML += `
                 <div class="bubble sensei">
                     ${marked.parse(data.reply)}
@@ -189,14 +303,48 @@
             `;
         } catch (e) { 
             load.style.display = 'none'; 
-            chat.innerHTML += `
-                <div class="bubble sensei">
-                    <p>Pesan tidak terkirim. Koneksi terputus.</p>
-                    <span class="time">${getTime()}</span>
-                </div>
-            `; 
+            chat.innerHTML += `<div class="bubble sensei"><p>Koneksi terputus.</p><span class="time">${getTime()}</span></div>`; 
         }
         chat.scrollTop = chat.scrollHeight;
+    }
+
+    // --- NUANCE COMPARATOR LOGIC ---
+    async function sendCompare() {
+        const wordA = document.getElementById('wordA').value.trim();
+        const wordB = document.getElementById('wordB').value.trim();
+        const resultBox = document.getElementById('compareResult');
+        const load = document.getElementById('compare-loading');
+
+        if(!wordA || !wordB) {
+            alert("Harap isi kedua kata yang ingin dibandingkan!");
+            return;
+        }
+
+        // Format pesan yang dikirim ke AI
+        const promptText = `Tolong bandingkan nuansa antara kata "${wordA}" dan "${wordB}".`;
+
+        resultBox.style.display = 'none';
+        load.style.display = 'block';
+
+        try {
+            // Memanggil endpoint khusus Nuance (/api/compare)
+            const res = await fetch("/api/compare", { 
+                method: "POST", 
+                headers: { "Content-Type": "application/json" }, 
+                body: JSON.stringify({ message: promptText }) 
+            });
+            const data = await res.json();
+            
+            load.style.display = 'none';
+            resultBox.style.display = 'block';
+            // Render hasil markdown ke dalam kotak hasil yang elegan
+            resultBox.innerHTML = marked.parse(data.reply);
+            
+        } catch (e) { 
+            load.style.display = 'none'; 
+            resultBox.style.display = 'block';
+            resultBox.innerHTML = "<p style='color:red;'>Terjadi kesalahan jaringan. Coba lagi.</p>";
+        }
     }
 </script>
 </body>
