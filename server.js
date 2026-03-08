@@ -30,11 +30,11 @@ app.post('/api/chat', async (req, res) => {
                 "X-Title": "HikariTutor"
             },
             body: JSON.stringify({
-                "model": "stepfun/step-3.5-flash:free",
+                "model": "google/gemini-2.0-flash-lite-preview-02-05:free",
                 "messages": [
                     { 
                         "role": "system", 
-                        "content": "Kamu adalah guru bahasa Jepang yang membantu user belajar secara natural. Gunakan Bahasa Indonesia untuk menjelaskan. Gunakan format Kanji[romaji] jika menulis kata Jepang agar sistem bisa menampilkannya dengan rapi." 
+                        "content": "Kamu adalah guru bahasa Jepang yang ramah. Bantu user belajar dengan penjelasan yang mudah dalam Bahasa Indonesia secara natural." 
                     },
                     { "role": "user", "content": req.body.message }
                 ]
