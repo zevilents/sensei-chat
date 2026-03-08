@@ -11,190 +11,71 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            /* Font standar sistem bawaan HP (seperti Telegram asli) */
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #e4e5e0; /* Warna abu luar */
-            margin: 0; 
-            display: flex; 
-            justify-content: center;
-            height: 100dvh; 
-            overflow: hidden;
-            color: #000;
+            background-color: #e4e5e0; 
+            margin: 0; display: flex; justify-content: center;
+            height: 100dvh; overflow: hidden; color: #000;
         }
 
         .app {
-            width: 100%; 
-            max-width: 500px; 
-            display: flex; 
-            flex-direction: column;
-            background-color: #8faebe; /* Warna biru-abu khas Telegram Chat */
-            /* Opsional: Efek pattern Telegram halus jika mau pakai gambar, tapi warna solid ini sudah sangat mirip */
-            position: relative;
+            width: 100%; max-width: 500px; display: flex; flex-direction: column;
+            background-color: #8faebe; position: relative;
         }
 
         /* --- HEADER --- */
         header {
-            background: #ffffff;
-            padding: 8px 15px;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            z-index: 10;
+            background: #ffffff; padding: 8px 15px; display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1); z-index: 10;
         }
 
+        .header-left { display: flex; align-items: center; }
         .avatar {
-            width: 40px; 
-            height: 40px; 
-            background: #3390ec; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            color: white;
-            font-size: 1.1rem; 
-            margin-right: 12px;
+            width: 40px; height: 40px; background: #3390ec; border-radius: 50%; display: flex; 
+            align-items: center; justify-content: center; color: white; font-size: 1.1rem; margin-right: 12px; transition: 0.3s;
         }
+        .avatar.compare-mode { background: #e67e22; } /* Ganti warna saat mode nuansa */
 
         .info { display: flex; flex-direction: column; }
         .info h1 { margin: 0; font-size: 16px; font-weight: 600; color: #000; }
         .info p { margin: 0; font-size: 13px; color: #3390ec; margin-top: 2px; }
 
-        /* --- CHAT AREA --- */
-        #chat-window {
-            flex: 1; 
-            padding: 15px; 
-            overflow-y: auto; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 8px; 
+        /* Mode Toggle Button */
+        #modeToggleBtn {
+            background: transparent; border: none; color: #3390ec; font-size: 14px; font-weight: 600;
+            cursor: pointer; padding: 5px 10px; border-radius: 15px; background: #f0f4f8; transition: 0.2s;
         }
+        #modeToggleBtn.active { background: #ffeaa7; color: #d35400; }
+
+        /* --- CHAT AREA --- */
+        #chat-window { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
 
         .bubble {
-            max-width: 85%; 
-            padding: 8px 12px; 
-            font-size: 15px; 
-            line-height: 1.45; 
-            position: relative; 
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1); 
-            word-wrap: break-word;
-            display: flex;
-            flex-direction: column; /* Memastikan jam selalu di bawah konten */
+            max-width: 85%; padding: 8px 12px; font-size: 15px; line-height: 1.45; position: relative; 
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1); word-wrap: break-word; display: flex; flex-direction: column;
         }
+        .sensei { align-self: flex-start; background: #ffffff; border-radius: 12px 12px 12px 4px; }
+        .user { align-self: flex-end; background: #effdde; border-radius: 12px 12px 4px 12px; }
 
-        .sensei {
-            align-self: flex-start; 
-            background: #ffffff; 
-            border-radius: 12px 12px 12px 4px; 
-        }
-
-        .user {
-            align-self: flex-end; 
-            background: #effdde; 
-            border-radius: 12px 12px 4px 12px; 
-        }
-
-        .time {
-            font-size: 11px; 
-            color: #a1aab3; 
-            align-self: flex-end; /* Memaksa jam ke kanan bawah */
-            margin-top: 4px;
-            margin-bottom: -2px;
-            margin-right: -4px;
-        }
+        .time { font-size: 11px; color: #a1aab3; align-self: flex-end; margin-top: 4px; margin-bottom: -2px; margin-right: -4px; }
         .user .time { color: #68bc70; }
 
-        /* --- PERBAIKAN MARKDOWN & TABEL (Sangat Penting) --- */
+        /* MARKDOWN FIXES */
         .bubble p { margin: 0 0 6px 0; }
         .bubble p:last-of-type { margin-bottom: 0; }
         .bubble strong { font-weight: 600; }
-        
-        /* List Bullets (Titik-titik) */
-        .bubble ul, .bubble ol {
-            margin: 6px 0;
-            padding-left: 20px;
-        }
+        .bubble ul, .bubble ol { margin: 6px 0; padding-left: 20px; }
         .bubble li { margin-bottom: 4px; }
 
-        /* Tabel Responsif */
-        .bubble table {
-            border-collapse: collapse;
-            width: 100%;
-            margin: 8px 0;
-            display: block; /* Membuat tabel bisa di-scroll */
-            overflow-x: auto; /* Scroll horizontal jika tabel kelebaran */
-            white-space: nowrap; /* Mencegah teks turun ke bawah dan gencet */
-            background-color: rgba(0,0,0,0.02);
-            border-radius: 6px;
-        }
-        .bubble th, .bubble td {
-            border: 1px solid #e0e0e0;
-            padding: 6px 10px;
-            text-align: left;
-            font-size: 14px;
-        }
-        .bubble th {
-            background-color: rgba(0,0,0,0.05);
-            font-weight: 600;
-        }
-
         /* --- INPUT AREA --- */
-        .input-bar {
-            background: #ffffff; 
-            padding: 8px 12px; 
-            display: flex; 
-            align-items: flex-end; 
-            gap: 10px; 
-            padding-bottom: calc(8px + env(safe-area-inset-bottom));
-        }
-
-        .input-wrapper {
-            flex: 1;
-            background: #f4f4f5;
-            border-radius: 20px;
-            padding: 0 15px;
-            display: flex;
-            align-items: center;
-        }
-
-        input {
-            flex: 1; 
-            background: transparent; 
-            border: none; 
-            padding: 10px 0; 
-            font-size: 15px; 
-            outline: none; 
-            font-family: inherit;
-        }
-
-        button#sendBtn {
-            background: #3390ec; 
-            color: white; 
-            border: none; 
-            width: 40px; 
-            height: 40px; 
-            border-radius: 50%; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            flex-shrink: 0;
-            transition: transform 0.1s;
-        }
-
+        .input-bar { background: #ffffff; padding: 8px 12px; display: flex; align-items: flex-end; gap: 10px; padding-bottom: calc(8px + env(safe-area-inset-bottom)); }
+        .input-wrapper { flex: 1; background: #f4f4f5; border-radius: 20px; padding: 0 15px; display: flex; align-items: center; }
+        input { flex: 1; background: transparent; border: none; padding: 10px 0; font-size: 15px; outline: none; font-family: inherit; }
+        button#sendBtn { background: #3390ec; color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.1s; }
         button#sendBtn:active { transform: scale(0.95); }
+        button#sendBtn.compare-mode { background: #e67e22; }
 
-        #loading {
-            align-self: flex-start; 
-            background: transparent; 
-            padding: 2px 15px; 
-            display: none; 
-            font-size: 13px; 
-            color: #3390ec;
-            font-weight: 500;
-            margin-bottom: 5px;
-        }
+        #loading { align-self: flex-start; background: transparent; padding: 2px 15px; display: none; font-size: 13px; color: #3390ec; font-weight: 500; margin-bottom: 5px; }
 
-        /* HIDDEN MUSIC */
         .elfsight-app-c7fb5b15-6956-4f7e-93e7-7f6bd801fb5e { display: none !important; }
     </style>
 </head>
@@ -204,16 +85,19 @@
 
 <div class="app">
     <header>
-        <div class="avatar">🏯</div>
-        <div class="info">
-            <h1>Hikari Sensei</h1>
-            <p>online</p>
+        <div class="header-left">
+            <div class="avatar" id="avatarIcon">🏯</div>
+            <div class="info">
+                <h1 id="headerTitle">Hikari Sensei</h1>
+                <p>online</p>
+            </div>
         </div>
+        <button id="modeToggleBtn" onclick="toggleMode()">⚖️ Nuansa</button>
     </header>
 
     <div id="chat-window">
         <div class="bubble sensei">
-            <p>Ohayou! Saya Hikari Sensei. Mari kita belajar bahasa Jepang bersama.</p>
+            <p>Ohayou! Saya Hikari Sensei. Ketik kata atau kalimat untuk dibedah. Jika ingin membandingkan dua kata, klik tombol **⚖️ Nuansa** di atas.</p>
             <span class="time" id="initTime"></span>
         </div>
     </div>
@@ -222,7 +106,7 @@
 
     <div class="input-bar">
         <div class="input-wrapper">
-            <input type="text" id="userInput" placeholder="Message" autocomplete="off" onkeypress="if(event.key==='Enter') sendMessage()">
+            <input type="text" id="userInput" placeholder="Ketik kata/kalimat..." autocomplete="off" onkeypress="if(event.key==='Enter') sendMessage()">
         </div>
         <button id="sendBtn" onclick="sendMessage()">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
@@ -232,6 +116,33 @@
 
 <script>
     document.getElementById('initTime').innerText = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+    let isCompareMode = false;
+
+    function toggleMode() {
+        isCompareMode = !isCompareMode;
+        const btn = document.getElementById('modeToggleBtn');
+        const title = document.getElementById('headerTitle');
+        const input = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const avatar = document.getElementById('avatarIcon');
+
+        if (isCompareMode) {
+            btn.classList.add('active');
+            title.innerText = "Comparator Mode";
+            input.placeholder = "Bandingkan kata (Cth: Miru vs Kengaku)";
+            sendBtn.classList.add('compare-mode');
+            avatar.classList.add('compare-mode');
+            avatar.innerText = "⚖️";
+        } else {
+            btn.classList.remove('active');
+            title.innerText = "Hikari Sensei";
+            input.placeholder = "Ketik kata/kalimat...";
+            sendBtn.classList.remove('compare-mode');
+            avatar.classList.remove('compare-mode');
+            avatar.innerText = "🏯";
+        }
+    }
 
     function getTime() {
         return new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
@@ -257,8 +168,11 @@
         load.style.display = 'block'; 
         chat.scrollTop = chat.scrollHeight;
 
+        // Tentukan API mana yang dipanggil berdasarkan mode aktif
+        const apiUrl = isCompareMode ? "/api/compare" : "/api/chat";
+
         try {
-            const res = await fetch("/api/chat", { 
+            const res = await fetch(apiUrl, { 
                 method: "POST", 
                 headers: { "Content-Type": "application/json" }, 
                 body: JSON.stringify({ message: text }) 
