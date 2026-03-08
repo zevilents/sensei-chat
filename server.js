@@ -26,7 +26,7 @@ app.post('/api/chat', async (req, res) => {
             headers: {
                 "Authorization": `Bearer ${OPENROUTER_API_KEY.trim()}`,
                 "Content-Type": "application/json",
-                "HTTP-Referer": "https://sensei-chat.onrender.com", 
+                "HTTP-Referer": "stepfun/step-3.5-flash:free", 
                 "X-Title": "HikariTutor"
             },
             body: JSON.stringify({
@@ -51,5 +51,6 @@ app.post('/api/chat', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 HikariTutor Live on port ${PORT}`));
+
 
 
